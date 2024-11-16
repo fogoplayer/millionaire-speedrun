@@ -1,6 +1,6 @@
 /** @typedef {import("../Resources.mjs").Resource} Resource */
+/** @typedef {import("../ActionExecutor.mjs").ActionExecutor} ActionExecutor */
 import { Action } from "../Action.mjs";
-import { ActionExecutor } from "../ActionExecutor.mjs";
 import { Stat } from "../Stat.mjs";
 import { StorageUnits } from "./StorageUnits.mjs";
 
@@ -25,7 +25,7 @@ export class Asset {
     this.produces = new Map(produces.map((resource) => [resource, new Stat(resource, 0)]));
     this.consumes = new Map(consumes.map((resource) => [resource, new Stat(resource, 0)]));
     this.storageUnits = new StorageUnits(this, stores);
-    this.preTransactionStorageUnits = this.storageUnits.copy();
+    // this.preTransactionStorageUnits = this.storageUnits.copy();
     this.actionExecutor = actionExecutor;
   }
 
@@ -86,7 +86,7 @@ export class Asset {
    * @param {Resource} resource
    */
   emitAction(verb, amount, resource) {
-    this.actionExecutor.queueAction(new Action(this, verb, amount, resource));
+    this.actionExecutor.queueActions(new Action(this, verb, amount, resource));
   }
 
   /**
@@ -99,7 +99,7 @@ export class Asset {
       case Action.CONSUME:
         return this.storageUnits.withdraw(action.resource, action.amount);
       default:
-        throwIfSwitchIsNotExhaustive(action.verb);
+        return throwIfSwitchIsNotExhaustive(action.verb);
     }
   }
 }
@@ -111,5 +111,5 @@ function abstractMethodShouldBeImplemented(args) {
 
 /** @param {never} condition */
 function throwIfSwitchIsNotExhaustive(condition) {
-  throw new Error("Unknown action verb");
+  return new Error("Unknown action verb");
 }

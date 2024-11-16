@@ -1,19 +1,12 @@
 /** @typedef {import("./Resources.mjs").Resource} Resource */
 /** @typedef {import("./Stat.mjs").Stat<R>} Stat @template {Resource} R*/
-/**
- * @template {Resource} P
- * @template {Resource} C
- * @template {Resource} S
- * @typedef {import("./assets/Asset.mjs").Asset<P, C, S>} Asset
- */
+/** @typedef {import("./assets/Asset.mjs").Asset} Asset */
 
-import { MONEY } from "./Resources.mjs";
-
-/** @type {Map<Resource, Asset<Resource, Resource, Resource>>} */
+/** @type {Map<Resource, Asset>} */
 const producers = new Map();
 
-/** @type {Map<Resource, Asset<Resource, Resource, Resource>>} */
+/** @type {Map<Resource, Asset>} */
 const consumers = new Map();
 
-/** @type {Map<Resource, Asset<Resource, Resource, Resource>>} */
+/** @type {Map<Resource, Asset>} */
 export const stores = new Map();

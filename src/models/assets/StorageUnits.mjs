@@ -1,6 +1,5 @@
 /** @typedef {import("../Resources.mjs").Resource} Resource */
-import { Asset } from "./Asset.mjs";
-
+/** @typedef {import("../assets/Asset.mjs").Asset} Asset */
 export class StorageUnits {
   /** @type {Map<Resource, number>} */
   #storageUnits = new Map();
