@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "default": "%project-name%",
+    "prod": "%project-name%"
+  }
+}
