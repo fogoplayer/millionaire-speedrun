@@ -10,3 +10,6 @@ const consumers = new Map();
 
 /** @type {Map<Resource, Asset>} */
 export const stores = new Map();
+
+/** @type {Set<Asset>} */
+export const assets = new Set();
