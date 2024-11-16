@@ -1,6 +1,4 @@
 /** @typedef {import("../Resources.mjs").Resource} Resource */
-/** @typedef {import("../ActionExecutor.mjs").ActionExecutor} ActionExecutor */
-
 import { Action } from "../Action.mjs";
 import { ActionExecutor } from "../ActionExecutor.mjs";
 import { Stat } from "../Stat.mjs";
@@ -27,6 +25,7 @@ export class Asset {
     this.produces = new Map(produces.map((resource) => [resource, new Stat(resource, 0)]));
     this.consumes = new Map(consumes.map((resource) => [resource, new Stat(resource, 0)]));
     this.storageUnits = new StorageUnits(this, stores);
+    this.preTransactionStorageUnits = this.storageUnits.copy();
     this.actionExecutor = actionExecutor;
   }
 
@@ -47,7 +46,8 @@ export class Asset {
    * @returns {boolean}
    */
   shouldTick(tick) {
-    return tick % 30 === 0;
+    return true;
+    // return tick % 30 === 0;
   }
 
   /**
@@ -95,11 +95,9 @@ export class Asset {
   handleAction(action) {
     switch (action.verb) {
       case Action.DEPOSIT:
-        this.storageUnits.deposit(action.resource, action.amount);
-        break;
+        return this.storageUnits.deposit(action.resource, action.amount);
       case Action.CONSUME:
-        this.storageUnits.withdraw(action.resource, action.amount);
-        break;
+        return this.storageUnits.withdraw(action.resource, action.amount);
       default:
         throwIfSwitchIsNotExhaustive(action.verb);
     }
