@@ -62,14 +62,8 @@ export class StorageUnits {
     return this.#storageUnits.get(resource) || 0;
   }
 
-  /**
-   * @param {Resource} resource
-   * @returns {number | Error} the balance, or the error that occurred
-   */
+  /** @param {Resource} resource */
   balance(resource) {
-    if (!this.#isValidKey(resource)) {
-      return new InvalidResourceError(resource, this.parent);
-    }
     return this.#storageUnits.get(resource) || 0;
   }
 

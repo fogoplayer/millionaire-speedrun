@@ -1,6 +1,7 @@
 /** @typedef {import("../Resources.mjs").Resource} Resource */
 /** @typedef {import("../ActionExecutor.mjs").ActionExecutor} ActionExecutor */
 import { Action } from "../Action.mjs";
+import { assetsPlaced } from "../AssetDirectory.mjs";
 import { Stat } from "../Stat.mjs";
 import { StorageUnits } from "./StorageUnits.mjs";
 
@@ -11,6 +12,8 @@ import { StorageUnits } from "./StorageUnits.mjs";
  * @template {Resource} [Stores=Resource]
  */
 export class Asset {
+  #isPlaced = false;
+
   /**
    * @param {{
    *  name: string,
@@ -36,7 +39,11 @@ export class Asset {
   /**
    * Initializes the asset on the map
    */
-  place = abstractMethodShouldBeImplemented;
+  place() {
+    this.#isPlaced = true;
+    assetsPlaced.add(this);
+    // TODO mixin other asset types
+  }
 
   /**
    * Takes in the current tick number and returns true if this asset should tick and false otherwise.
@@ -46,8 +53,7 @@ export class Asset {
    * @returns {boolean}
    */
   shouldTick(tick) {
-    return true;
-    // return tick % 30 === 0;
+    return this.#isPlaced && true; // tick % 30 === 0;
   }
 
   /**

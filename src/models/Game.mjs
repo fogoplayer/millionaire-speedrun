@@ -1,5 +1,9 @@
+/** @typedef {import("./assets/Asset.mjs").Asset} Asset */
+/** @typedef {import("./Resources.mjs").Resource} Resource */
 import { ActionExecutor } from "./ActionExecutor.mjs";
-import { assetsPlaced } from "./AssetDirectory.mjs";
+import { assetsPlaced, consumersPlaced, producersPlaced, storesPlaced } from "./AssetDirectory.mjs";
+import { BronzeTradingPost } from "./assets/money/producers/BronzeTradingPost.mjs";
+import { CheckingAccount } from "./assets/money/storage/CheckingAccount.mjs";
 
 export class Game {
   actionExecutor = new ActionExecutor();
@@ -14,6 +18,7 @@ export class Game {
       asset.tick(this.#ticks);
     });
     this.actionExecutor.executeTransaction();
+    this.printGameState();
     this.#ticks++;
   }
 
@@ -24,4 +29,46 @@ export class Game {
   pause() {
     clearInterval(this.tickInterval);
   }
+
+  /** @param {Asset} asset */
+  placeAsset(asset) {
+    asset.place();
+  }
+
+  getGameState() {
+    return {
+      ticks: this.#ticks,
+      assets: [...assetsPlaced].map((asset) => asset.name).join(", "),
+      productionTotals: this.getDirectoryEntryTotals(producersPlaced),
+      consumptionTotals: this.getDirectoryEntryTotals(consumersPlaced),
+      storageTotals: this.getDirectoryEntryTotals(storesPlaced),
+    };
+  }
+
+  /** @param {Map<Resource, Asset[]>} directory */
+  getDirectoryEntryTotals(directory) {
+    /** @type {Record<string, number>} */
+    const resourceTotals = {};
+
+    producersPlaced.forEach((assets, resource) => {
+      resourceTotals[resource.description ?? ""] = assets.reduce(
+        (total, asset) => total + asset.storageUnits.balance(resource),
+        0
+      );
+    });
+  }
+
+  printGameState() {
+    const state = this.getGameState();
+    console.log(`Ticks: ${state.ticks}
+Assets: ${state.assets}
+Production: ${JSON.stringify(state.productionTotals)}
+Consumption: ${JSON.stringify(state.consumptionTotals)}
+Storage: ${JSON.stringify(state.storageTotals)}`);
+  }
 }
+
+const game = new Game();
+game.placeAsset(new BronzeTradingPost(game.actionExecutor));
+game.placeAsset(new CheckingAccount(game.actionExecutor));
+game.play();

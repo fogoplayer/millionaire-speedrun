@@ -6,13 +6,13 @@
 // Game state //
 ////////////////
 
-/** @type {Map<Resource, Asset>} */
-const producersPlaced = new Map();
+/** @type {Map<Resource, Asset[]>} */
+export const producersPlaced = new Map();
 
-/** @type {Map<Resource, Asset>} */
-const consumersPlaced = new Map();
+/** @type {Map<Resource, Asset[]>} */
+export const consumersPlaced = new Map();
 
-/** @type {Map<Resource, Asset>} */
+/** @type {Map<Resource, Asset[]>} */
 export const storesPlaced = new Map();
 
 /** @type {Set<Asset>} */
