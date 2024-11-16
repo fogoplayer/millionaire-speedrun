@@ -2,13 +2,12 @@
 import { Asset } from "../../Asset.mjs";
 import * as Resources from "../../../Resources.mjs";
 
-export class RamenFarmAsset extends Asset {
+export class BronzeTradingPost extends Asset {
   /** @param {ActionExecutor} actionExecutor */
   constructor(actionExecutor) {
     super({
-      name: "Ramen Farm",
-      produces: [{ resource: Resources.FOOD, amount: 10 }],
-      consumes: [{ resource: Resources.MONEY, amount: 3 }],
+      name: "Bronze Trading Post",
+      produces: [{ resource: Resources.MONEY, amount: 10 }],
       actionExecutor,
     });
   }
