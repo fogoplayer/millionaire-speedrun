@@ -1,13 +1,20 @@
+/** @typedef {import("./Resources.mjs").Resource} Resource */
+import { Asset } from "./assets/Asset.mjs";
+
 export class Action {
-  static PRODUCE = Symbol("produce");
+  static DEPOSIT = Symbol("produce");
   static CONSUME = Symbol("consume");
 
   /**
-   * @param {Action.PRODUCE | Action.CONSUME} verb
+   * @param {Asset<Resource, Resource, Resource>} originator
+   * @param {Action.DEPOSIT | Action.CONSUME} verb
    * @param {number} amount
+   * @param {Resource} resource
    */
-  constructor(verb, amount) {
+  constructor(originator, verb, amount, resource) {
+    this.orginator = originator;
     this.verb = verb;
     this.amount = amount;
+    this.resource = resource;
   }
 }
