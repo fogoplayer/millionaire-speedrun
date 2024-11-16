@@ -12,13 +12,9 @@ import { Stat } from "../Stat.mjs";
  */
 export class Asset {
   /**
-   * @param {string} name
-   * @param {Produces[]} produces
-   * @param {Consumes[]} consumes
-   * @param {Stores[]} stores
-   * @param {ActionExecutor} actionExecutor
+   * @param {{name: string, produces:Produces[], consumes:Consumes[], stores:Stores[], actionExecutor:ActionExecutor}} params
    */
-  constructor(name, produces, consumes, stores, actionExecutor) {
+  constructor({ name, produces, consumes, stores, actionExecutor }) {
     this.name = name;
     this.produces = new Map(produces.map((resource) => [resource, new Stat(resource, 0)]));
     this.consumes = new Map(consumes.map((resource) => [resource, new Stat(resource, 0)]));
