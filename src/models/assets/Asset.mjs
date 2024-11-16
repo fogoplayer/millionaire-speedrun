@@ -20,8 +20,8 @@ export class Asset {
    */
   constructor(name, produces, consumes, stores, actionExecutor) {
     this.name = name;
-    this.produces = new Set(produces.map((resource) => new Stat(resource, 0)));
-    this.consumes = new Set(consumes.map((resource) => new Stat(resource, 0)));
+    this.produces = new Map(produces.map((resource) => [resource, new Stat(resource, 0)]));
+    this.consumes = new Map(consumes.map((resource) => [resource, new Stat(resource, 0)]));
     this.storageUnits = new StorageUnits(this, stores);
     this.actionExecutor = actionExecutor;
   }
@@ -130,7 +130,7 @@ class StorageUnits {
    */
   deposit(resource, amount) {
     if (!this.#isValidKey(resource)) {
-      return new Error(`${resource.description} cannot be deposited in ${this.parent.name}`);
+      return new Error(`${resource.description} is not stored in ${this.parent.name}`);
     }
 
     this.#storageUnits.set(resource, (this.#storageUnits.get(resource) || 0) + amount);
@@ -144,11 +144,26 @@ class StorageUnits {
    */
   withdraw(resource, amount) {
     const balance = this.#storageUnits.get(resource) || 0;
+    if (!this.#isValidKey(resource)) {
+      return new Error(`${resource.description} is not stored in ${this.parent.name}`);
+    }
+
     if (balance < amount) {
       return new Error(`Insufficient resource balance for ${resource.description} in ${this.parent.name}`);
     }
 
     this.#storageUnits.set(resource, -amount);
+    return this.#storageUnits.get(resource) || 0;
+  }
+
+  /**
+   * @param {Resource} resource
+   * @returns {number | Error} the balance, or the error that occurred
+   */
+  balance(resource) {
+    if (!this.#isValidKey(resource)) {
+      return new Error(`${resource.description} is not stored in ${this.parent.name}`);
+    }
     return this.#storageUnits.get(resource) || 0;
   }
 }
