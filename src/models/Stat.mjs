@@ -1,9 +1,10 @@
 /** @typedef {import("./Resources.mjs").Resource} Resource */
 
-import { MONEY } from "./Resources.mjs";
-
+/**
+ * @template {Resource} StatResource
+ */
 export class Stat {
-  /** @type {Resource} */
+  /** @type {StatResource} */
   resource;
 
   /** @type {number} */
@@ -11,7 +12,7 @@ export class Stat {
 
   /**
    *
-   * @param {Resource} resource
+   * @param {StatResource} resource
    * @param {number} amount
    */
   constructor(resource, amount) {

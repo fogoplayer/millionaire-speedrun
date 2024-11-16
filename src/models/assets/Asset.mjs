@@ -1,26 +1,22 @@
-/** @typedef {import("../Stat.mjs").Stat} Stat */
+/** @typedef {import("../Resources.mjs").Resource} Resource */
+/** @template {Resource} StatResource @typedef {import("../Stat.mjs").Stat<StatResource>} Stat */
 
 /**
  * @abstract
- * @template {Stat} Produces
- * @template {Stat} Consumes
- * @template {Stat} Stores
+ * @template {Resource} Produces
+ * @template {Resource} Consumes
+ * @template {Resource} Stores
  */
 export class Asset {
   /** @abstract @type {string} */
   name;
 
-  /** @type {Set<Produces>} */
-  produces;
-  consumes;
-  stores;
-
   /**
    *
    * @param {string} name
-   * @param {Produces[]} produces
-   * @param {Consumes[]} consumes
-   * @param {Stores[]} stores
+   * @param {Stat<Produces>[]} produces
+   * @param {Stat<Consumes>[]} consumes
+   * @param {Stat<Stores>[]} stores
    */
   constructor(name, produces, consumes, stores) {
     this.name = name;
@@ -52,7 +48,11 @@ export class Asset {
    * @param {number} tick
    * @returns {void}
    */
-  tick = abstractMethodShouldBeImplemented;
+  tick(tick) {
+    if (!this.shouldTick(tick)) {
+      return;
+    }
+  }
 
   /**
    * Destroys the asset
