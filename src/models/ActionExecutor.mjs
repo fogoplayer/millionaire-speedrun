@@ -1,5 +1,5 @@
 import { Action } from "./Action.mjs";
-import { stores } from "./AssetDirectory.mjs";
+import { storesPlaced } from "./AssetDirectory.mjs";
 
 export class ActionExecutor {
   /** @type {Action[][]} */
@@ -42,7 +42,7 @@ export class ActionExecutor {
    * @returns {number | Error}
    */
   executeAction(action) {
-    let resourceStore = stores.get(action.resource);
+    let resourceStore = storesPlaced.get(action.resource);
     if (!resourceStore) {
       console.warn(`Storage for ${action.resource.description} not found`);
       return -1;

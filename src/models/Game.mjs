@@ -1,5 +1,5 @@
 import { ActionExecutor } from "./ActionExecutor.mjs";
-import { assets } from "./AssetDirectory.mjs";
+import { assetsPlaced } from "./AssetDirectory.mjs";
 
 export class Game {
   actionExecutor = new ActionExecutor();
@@ -10,7 +10,7 @@ export class Game {
   #ticks = 0;
 
   tick() {
-    assets.forEach((asset) => {
+    assetsPlaced.forEach((asset) => {
       asset.tick(this.#ticks);
     });
     this.actionExecutor.executeTransaction();

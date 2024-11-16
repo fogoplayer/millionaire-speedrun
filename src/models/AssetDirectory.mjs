@@ -2,14 +2,25 @@
 /** @typedef {import("./Stat.mjs").Stat<R>} Stat @template {Resource} R*/
 /** @typedef {import("./assets/Asset.mjs").Asset} Asset */
 
-/** @type {Map<Resource, Asset>} */
-const producers = new Map();
+////////////////
+// Game state //
+////////////////
 
 /** @type {Map<Resource, Asset>} */
-const consumers = new Map();
+const producersPlaced = new Map();
 
 /** @type {Map<Resource, Asset>} */
-export const stores = new Map();
+const consumersPlaced = new Map();
+
+/** @type {Map<Resource, Asset>} */
+export const storesPlaced = new Map();
 
 /** @type {Set<Asset>} */
-export const assets = new Set();
+export const assetsPlaced = new Set();
+
+/////////////
+// Options //
+/////////////
+
+/** @param {Asset} asset  */
+export function register(asset) {}
