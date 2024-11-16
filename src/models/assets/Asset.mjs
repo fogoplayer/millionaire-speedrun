@@ -14,16 +14,16 @@ export class Asset {
   /**
    * @param {{
    *  name: string,
-   *  produces:Produces[],
-   *  consumes:Consumes[],
-   *  stores:Stores[],
+   *  produces?: Stat<Produces>[],
+   *  consumes?: Stat<Consumes>[],
+   *  stores?: (Stores | Stat<Stores>)[],
    *  actionExecutor: ActionExecutor
    * }} params
    */
-  constructor({ name, produces, consumes, stores, actionExecutor }) {
+  constructor({ name, produces = [], consumes = [], stores = [], actionExecutor }) {
     this.name = name;
-    this.produces = new Map(produces.map((resource) => [resource, new Stat(resource, 0)]));
-    this.consumes = new Map(consumes.map((resource) => [resource, new Stat(resource, 0)]));
+    this.produces = new Map(produces.map((stat) => [stat.resource, stat]));
+    this.consumes = new Map(consumes.map((stat) => [stat.resource, stat]));
     this.storageUnits = new StorageUnits(this, stores);
     // this.preTransactionStorageUnits = this.storageUnits.copy();
     this.actionExecutor = actionExecutor;

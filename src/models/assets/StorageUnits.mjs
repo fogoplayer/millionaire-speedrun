@@ -1,4 +1,7 @@
 /** @typedef {import("../Resources.mjs").Resource} Resource */
+
+import { Stat } from "../Stat.mjs";
+
 /** @typedef {import("../assets/Asset.mjs").Asset} Asset */
 export class StorageUnits {
   /** @type {Map<Resource, number>} */
@@ -6,11 +9,16 @@ export class StorageUnits {
 
   /**
    * @param {Asset} parent
-   * @param {Resource[]} validKeys
+   * @param {(Resource | Stat<Resource>)[]} initial
    */
-  constructor(parent, validKeys) {
+  constructor(parent, initial) {
     this.parent = parent;
-    this.validKeys = new Set(validKeys);
+    this.validKeys = new Set(initial.map((key) => (key instanceof Stat ? key.resource : key)));
+    initial.forEach((key) => {
+      if (key instanceof Stat) {
+        this.#storageUnits.set(key.resource, key.amount);
+      } else this.#storageUnits.set(key, 0);
+    });
   }
 
   /**
