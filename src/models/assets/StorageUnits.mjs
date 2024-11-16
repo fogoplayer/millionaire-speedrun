@@ -48,7 +48,7 @@ export class StorageUnits {
     }
 
     if (balance < amount) {
-      return new Error(`Insufficient resource balance for ${resource.description} in ${this.parent.name}`);
+      return new InsufficientResourceError(resource, this.parent);
     }
 
     this.#storageUnits.set(resource, -amount);
@@ -65,6 +65,11 @@ export class StorageUnits {
     }
     return this.#storageUnits.get(resource) || 0;
   }
+
+  // copy() {
+  //   const copy = new StorageUnits(this.parent, [...this.validKeys]);
+  //   this.#storageUnits.forEach((value, key) => copy.deposit(key, value));
+  // }
 }
 
 export class InvalidResourceError extends Error {
@@ -74,5 +79,15 @@ export class InvalidResourceError extends Error {
    */
   constructor(resource, asset) {
     super(`${resource.description} is not stored in ${asset.name}`);
+  }
+}
+
+export class InsufficientResourceError extends Error {
+  /**
+   * @param {Resource} resource
+   * @param {Asset} asset
+   */
+  constructor(resource, asset) {
+    super(`Insufficient ${resource.description} in ${asset.name}`);
   }
 }
