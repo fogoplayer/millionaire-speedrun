@@ -1,29 +1,34 @@
 /** @typedef {import("../Resources.mjs").Resource} Resource */
-/** @template {Resource} StatResource @typedef {import("../Stat.mjs").Stat<StatResource>} Stat */
+/** @typedef {import("../ActionExecutor.mjs").ActionExecutor} ActionExecutor */
+
+import { Action } from "../Action.mjs";
+import { Stat } from "../Stat.mjs";
 
 /**
  * @abstract
- * @template {Resource} Produces
- * @template {Resource} Consumes
- * @template {Resource} Stores
+ * @template {Resource} [Produces=Resource]
+ * @template {Resource} [Consumes=Resource]
+ * @template {Resource} [Stores=Resource]
  */
 export class Asset {
-  /** @abstract @type {string} */
-  name;
-
   /**
-   *
    * @param {string} name
-   * @param {Stat<Produces>[]} produces
-   * @param {Stat<Consumes>[]} consumes
-   * @param {Stat<Stores>[]} stores
+   * @param {Produces[]} produces
+   * @param {Consumes[]} consumes
+   * @param {Stores[]} stores
+   * @param {ActionExecutor} actionExecutor
    */
-  constructor(name, produces, consumes, stores) {
+  constructor(name, produces, consumes, stores, actionExecutor) {
     this.name = name;
-    this.produces = new Set(produces);
-    this.consumes = new Set(consumes);
-    this.stores = new Set(stores);
+    this.produces = new Set(produces.map((resource) => new Stat(resource, 0)));
+    this.consumes = new Set(consumes.map((resource) => new Stat(resource, 0)));
+    this.storageUnits = new StorageUnits(this, stores);
+    this.actionExecutor = actionExecutor;
   }
+
+  ///////////////////////
+  // Lifecycle methods //
+  ///////////////////////
 
   /**
    * Initializes the asset on the map
@@ -52,6 +57,13 @@ export class Asset {
     if (!this.shouldTick(tick)) {
       return;
     }
+
+    this.produces.forEach((stat) => {
+      this.emitAction(Action.DEPOSIT, stat.amount, stat.resource);
+    });
+    this.consumes.forEach((stat) => {
+      this.emitAction(Action.CONSUME, stat.amount, stat.resource);
+    });
   }
 
   /**
@@ -59,9 +71,94 @@ export class Asset {
    * @param {number} tick
    */
   destroy = abstractMethodShouldBeImplemented;
+
+  ////////////////////
+  // Action methods //
+  ////////////////////
+
+  /**
+   * @param {Action.DEPOSIT | Action.CONSUME} verb
+   * @param {number} amount
+   * @param {Resource} resource
+   */
+  emitAction(verb, amount, resource) {
+    this.actionExecutor.queueAction(new Action(this, verb, amount, resource));
+  }
+
+  /**
+   * @param {Action} action
+   */
+  handleAction(action) {
+    switch (action.verb) {
+      case Action.DEPOSIT:
+        this.storageUnits.deposit(action.resource, action.amount);
+        break;
+      case Action.CONSUME:
+        this.storageUnits.withdraw(action.resource, action.amount);
+        break;
+      default:
+        throwIfSwitchIsNotExhaustive(action.verb);
+    }
+  }
+}
+
+class StorageUnits {
+  /** @type {Map<Resource, number>} */
+  #storageUnits = new Map();
+
+  /**
+   * @param {Asset} parent
+   * @param {Resource[]} validKeys
+   */
+  constructor(parent, validKeys) {
+    this.parent = parent;
+    this.validKeys = new Set(validKeys);
+  }
+
+  /**
+   * @param {Resource} key
+   * @returns {boolean}
+   */
+  #isValidKey(key) {
+    return this.validKeys.has(key);
+  }
+
+  /**
+   * @param {Resource} resource
+   * @param {number} amount
+   * @returns {number | Error} the new balance, or the error that occurred
+   */
+  deposit(resource, amount) {
+    if (!this.#isValidKey(resource)) {
+      return new Error(`${resource.description} cannot be deposited in ${this.parent.name}`);
+    }
+
+    this.#storageUnits.set(resource, (this.#storageUnits.get(resource) || 0) + amount);
+    return this.#storageUnits.get(resource) || 0;
+  }
+
+  /**
+   * @param {Resource} resource
+   * @param {number} amount
+   * @returns {number | Error} the new balance, or the error that occurred
+   */
+  withdraw(resource, amount) {
+    const balance = this.#storageUnits.get(resource) || 0;
+    if (balance < amount) {
+      return new Error(`Insufficient resource balance for ${resource.description} in ${this.parent.name}`);
+    }
+
+    this.#storageUnits.set(resource, -amount);
+    return this.#storageUnits.get(resource) || 0;
+  }
 }
 
 /** @param {unknown} args */
 function abstractMethodShouldBeImplemented(args) {
   throw new Error("Not implemented");
+}
+
+/** @param {never} condition */
+function throwIfSwitchIsNotExhaustive(condition) {
+  throw new Error("Unknown action verb");
 }
