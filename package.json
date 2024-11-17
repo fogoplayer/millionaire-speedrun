@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "firebase serve",
+    "start": "firebase use default && firebase serve",
     "test": "clear && jest tests/app.test.js && npm run lint",
     "deployprod": "git checkout main && git merge dev --no-edit && git push && firebase deploy --only hosting -P prod && git checkout dev",
     "deploydev": "git checkout dev && git push && firebase deploy --only hosting -P default",

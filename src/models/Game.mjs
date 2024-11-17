@@ -15,6 +15,9 @@ export class Game {
 
   #ticks = 0;
 
+  /** @type {Set<() => void>} */
+  onTickListeners = new Set();
+
   tick() {
     assetsPlaced.forEach((asset) => {
       asset.tick(this.#ticks);
@@ -24,6 +27,8 @@ export class Game {
       this.pause();
       return;
     }
+
+    this.onTickListeners.forEach((listener) => listener());
     this.printGameState();
     this.#ticks++;
   }
@@ -56,6 +61,14 @@ export class Game {
       storageTotals: this.getDirectoryEntryTotals(storesPlaced, (asset, resource) =>
         asset.storageUnits.balance(resource)
       ),
+      toString() {
+        return `Ticks: ${this.ticks}
+Assets: ${this.assets}
+Production: ${JSON.stringify(this.productionTotals, null, 2)}
+Consumption: ${JSON.stringify(this.consumptionTotals, null, 2)}
+Storage: ${JSON.stringify(this.storageTotals, null, 2)}
+          `;
+      },
     };
   }
 
@@ -77,19 +90,13 @@ export class Game {
   }
 
   printGameState() {
-    const state = this.getGameState();
-    console.log(`Ticks: ${state.ticks}
-Assets: ${state.assets}
-Production: ${JSON.stringify(state.productionTotals)}
-Consumption: ${JSON.stringify(state.consumptionTotals)}
-Storage: ${JSON.stringify(state.storageTotals)}
-`);
+    console.log(this.getGameState().toString());
   }
 }
 
-const game = new Game();
-game.placeAsset(new BronzeTradingPost(game.actionExecutor));
-game.placeAsset(new CheckingAccount(game.actionExecutor));
-game.placeAsset(new RamenFarmAsset(game.actionExecutor));
-game.placeAsset(new Pantry(game.actionExecutor));
-game.play();
+// const game = new Game();
+// game.placeAsset(new BronzeTradingPost(game.actionExecutor));
+// game.placeAsset(new CheckingAccount(game.actionExecutor));
+// game.placeAsset(new RamenFarmAsset(game.actionExecutor));
+// game.placeAsset(new Pantry(game.actionExecutor));
+// game.play();
