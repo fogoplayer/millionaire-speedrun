@@ -41,20 +41,31 @@ export class Game {
     return {
       ticks: this.#ticks,
       assets: [...assetsPlaced].map((asset) => asset.name).join(", "),
-      productionTotals: this.getDirectoryEntryTotals(producersPlaced),
-      consumptionTotals: this.getDirectoryEntryTotals(consumersPlaced),
-      storageTotals: this.getDirectoryEntryTotals(storesPlaced),
+      productionTotals: this.getDirectoryEntryTotals(
+        producersPlaced,
+        (asset, resource) => asset.produces.get(resource)?.amount || 0
+      ),
+      consumptionTotals: this.getDirectoryEntryTotals(
+        consumersPlaced,
+        (asset, resource) => asset.consumes.get(resource)?.amount || 0
+      ),
+      storageTotals: this.getDirectoryEntryTotals(storesPlaced, (asset, resource) =>
+        asset.storageUnits.balance(resource)
+      ),
     };
   }
 
-  /** @param {Map<Resource, Asset[]>} directory */
-  getDirectoryEntryTotals(directory) {
+  /**
+   * @param {Map<Resource, Asset[]>} directory
+   * @param {(asset: Asset, resource: Resource) => number} extractor
+   */
+  getDirectoryEntryTotals(directory, extractor) {
     /** @type {Record<string, number>} */
     const resourceTotals = {};
 
     directory.forEach((assets, resource) => {
       resourceTotals[resource.description ?? ""] = assets.reduce(
-        (total, asset) => total + asset.storageUnits.balance(resource),
+        (total, asset) => total + extractor(asset, resource),
         0
       );
     });
