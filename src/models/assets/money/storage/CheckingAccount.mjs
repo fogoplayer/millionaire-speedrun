@@ -3,13 +3,12 @@
 import { Asset } from "../../Asset.mjs";
 import * as Resources from "../../../Resources.mjs";
 import { register } from "../../../game-state/GlobalAssetDirectory.mjs";
+import { Action } from "../../../Action.mjs";
+import { Investment } from "./Investment.mjs";
 
-export class CheckingAccount extends Asset {
+export class CheckingAccount extends Investment {
   constructor() {
-    super({
-      name: "Checking Account",
-      stores: [Resources.MONEY],
-    });
+    super("Checking Account", 0.01);
   }
 }
 
