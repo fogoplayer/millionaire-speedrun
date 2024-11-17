@@ -42,6 +42,12 @@ export class Game {
     clearInterval(this.tickInterval);
   }
 
+  /** @param {new(a: ActionExecutor, b: AssetDirectory) =>Asset} assetClass */
+  spawnAsset(assetClass) {
+    const asset = new assetClass(this.actionExecutor, this.assetDirectory);
+    return asset;
+  }
+
   /** @param {Asset} asset */
   placeAsset(asset) {
     asset.place();
