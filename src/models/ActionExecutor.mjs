@@ -1,4 +1,4 @@
-/** @typedef {import("./AssetDirectory.mjs").AssetDirectory} AssetDirectory */
+/** @typedef {import("./ScenarioAssetDirectory.mjs").ScenarioAssetDirectory} AssetDirectory */
 import { Action } from "./Action.mjs";
 
 export class ActionExecutor {
@@ -52,7 +52,7 @@ export class ActionExecutor {
    * @returns {number | Error}
    */
   executeAction(action) {
-    let resourceStore = this.assetDirectory.storesPlaced.get(action.resource)?.[0];
+    let resourceStore = this.assetDirectory.stores.get(action.resource)?.[0];
     if (!resourceStore) {
       console.warn(`Storage for ${action.resource.description} not found`);
       return -1;

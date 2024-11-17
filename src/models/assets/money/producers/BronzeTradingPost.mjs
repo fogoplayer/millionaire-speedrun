@@ -1,5 +1,5 @@
 /** @typedef {import("../../../ActionExecutor.mjs").ActionExecutor} ActionExecutor */
-/** @typedef {import("../../../AssetDirectory.mjs").AssetDirectory} AssetDirectory */
+/** @typedef {import("../../../ScenarioAssetDirectory.mjs").ScenarioAssetDirectory} AssetDirectory */
 import { Asset } from "../../Asset.mjs";
 import * as Resources from "../../../Resources.mjs";
 
@@ -12,7 +12,8 @@ export class BronzeTradingPost extends Asset {
     super({
       name: "Bronze Trading Post",
       produces: [{ resource: Resources.MONEY, amount: 10 }],
-      actionExecutor,assetDirectory
+      actionExecutor,
+      assetDirectory,
     });
   }
 }

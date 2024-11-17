@@ -1,14 +1,14 @@
 /** @typedef {import("./assets/Asset.mjs").Asset} Asset */
 /** @typedef {import("./Resources.mjs").Resource} Resource */
 import { ActionExecutor } from "./ActionExecutor.mjs";
-import { AssetDirectory } from "./AssetDirectory.mjs";
+import { ScenarioAssetDirectory } from "./ScenarioAssetDirectory.mjs";
 import { RamenFarm } from "./assets/food/producers/RamenFarm.mjs";
 import { Pantry } from "./assets/food/storage/Pantry.mjs";
 import { BronzeTradingPost } from "./assets/money/producers/BronzeTradingPost.mjs";
 import { CheckingAccount } from "./assets/money/storage/CheckingAccount.mjs";
 
 export class Scenario {
-  assetDirectory = new AssetDirectory();
+  assetDirectory = new ScenarioAssetDirectory();
   actionExecutor = new ActionExecutor(this.assetDirectory);
 
   /** @type {ReturnType<setInterval> | undefined} */
@@ -20,7 +20,7 @@ export class Scenario {
   onTickListeners = new Set();
 
   tick() {
-    this.assetDirectory.assetsPlaced.forEach((asset) => {
+    this.assetDirectory.assets.forEach((asset) => {
       asset.tick(this.#ticks);
     });
     const success = this.actionExecutor.executeTransaction();
@@ -42,7 +42,7 @@ export class Scenario {
     clearInterval(this.tickInterval);
   }
 
-  /** @param {new(a: ActionExecutor, b: AssetDirectory) =>Asset} assetClass */
+  /** @param {new(a: ActionExecutor, b: ScenarioAssetDirectory) =>Asset} assetClass */
   spawnAsset(assetClass) {
     const asset = new assetClass(this.actionExecutor, this.assetDirectory);
     return asset;
@@ -56,16 +56,16 @@ export class Scenario {
   getGameState() {
     return {
       ticks: this.#ticks,
-      assets: [...this.assetDirectory.assetsPlaced].map((asset) => asset.name).join(", "),
+      assets: [...this.assetDirectory.assets].map((asset) => asset.name).join(", "),
       productionTotals: this.getDirectoryEntryTotals(
-        this.assetDirectory.producersPlaced,
+        this.assetDirectory.producers,
         (asset, resource) => asset.produces.get(resource) || 0
       ),
       consumptionTotals: this.getDirectoryEntryTotals(
-        this.assetDirectory.consumersPlaced,
+        this.assetDirectory.consumers,
         (asset, resource) => asset.consumes.get(resource) || 0
       ),
-      storageTotals: this.getDirectoryEntryTotals(this.assetDirectory.storesPlaced, (asset, resource) =>
+      storageTotals: this.getDirectoryEntryTotals(this.assetDirectory.stores, (asset, resource) =>
         asset.storageUnits.balance(resource)
       ),
       toString() {
