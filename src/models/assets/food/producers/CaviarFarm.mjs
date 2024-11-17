@@ -9,10 +9,7 @@ export class RamenFarm extends Asset {
     super({
       name: "Ramen Farm",
       produces: [{ resource: Resources.FOOD, amount: 10 }],
-      consumes: [
-        { resource: Resources.MONEY, amount: 3 },
-        { resource: Resources.HAPPINESS, amount: 1 },
-      ],
+      consumes: [{ resource: Resources.MONEY, amount: 3 }],
     });
   }
 }

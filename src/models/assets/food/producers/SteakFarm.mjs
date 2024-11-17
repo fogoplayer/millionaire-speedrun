@@ -4,17 +4,17 @@ import { Asset } from "../../Asset.mjs";
 import * as Resources from "../../../Resources.mjs";
 import { register } from "../../../game-state/GlobalAssetDirectory.mjs";
 
-export class RamenFarm extends Asset {
+export class CaviarFarm extends Asset {
   constructor() {
     super({
-      name: "Ramen Farm",
-      produces: [{ resource: Resources.FOOD, amount: 10 }],
-      consumes: [
-        { resource: Resources.MONEY, amount: 3 },
-        { resource: Resources.HAPPINESS, amount: 1 },
+      name: "Caviar Farm",
+      produces: [
+        { resource: Resources.FOOD, amount: 10 },
+        { resource: Resources.HAPPINESS, amount: 6 },
       ],
+      consumes: [{ resource: Resources.MONEY, amount: 1500 }],
     });
   }
 }
 
-register(new RamenFarm());
+register(new CaviarFarm());
