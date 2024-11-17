@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Skipped minification because the original files appears to be already minified.
  * Original file: /npm/@pwabuilder/pwaupdate@0.2.1/dist/pwa-update.js
