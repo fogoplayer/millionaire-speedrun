@@ -1,23 +1,22 @@
 /** @typedef {import("../Resources.mjs").Resource} Resource */
+/** @typedef {import("../assets/Asset.mjs").Asset} Asset */
 
 import { Stat } from "../Stat.mjs";
 
-/** @typedef {import("../assets/Asset.mjs").Asset} Asset */
-export class StorageUnits {
-  /** @type {Map<Resource, number>} */
-  #storageUnits = new Map();
-
+/** @extends {Map<Resource, number>} */
+export class StorageUnits extends Map {
   /**
    * @param {Asset} parent
    * @param {(Resource | Stat<Resource>)[]} initial
    */
   constructor(parent, initial) {
+    super();
     this.parent = parent;
     this.validKeys = new Set(initial.map((key) => (key instanceof Stat ? key.resource : key)));
     initial.forEach((key) => {
       if (key instanceof Stat) {
-        this.#storageUnits.set(key.resource, key.amount);
-      } else this.#storageUnits.set(key, 0);
+        this.set(key.resource, key.amount);
+      } else this.set(key, 0);
     });
   }
 
@@ -39,8 +38,8 @@ export class StorageUnits {
       return new InvalidResourceError(resource, this.parent);
     }
 
-    this.#storageUnits.set(resource, (this.#storageUnits.get(resource) || 0) + amount);
-    return this.#storageUnits.get(resource) || 0;
+    this.set(resource, (this.get(resource) || 0) + amount);
+    return this.get(resource) || 0;
   }
 
   /**
@@ -49,7 +48,7 @@ export class StorageUnits {
    * @returns {number | Error} the new balance, or the error that occurred
    */
   withdraw(resource, amount) {
-    const balance = this.#storageUnits.get(resource) || 0;
+    const balance = this.get(resource) || 0;
     if (!this.#isValidKey(resource)) {
       return new InvalidResourceError(resource, this.parent);
     }
@@ -58,13 +57,13 @@ export class StorageUnits {
       return new InsufficientResourceError(resource, this.parent);
     }
 
-    this.#storageUnits.set(resource, -amount);
-    return this.#storageUnits.get(resource) || 0;
+    this.set(resource, -amount);
+    return this.get(resource) || 0;
   }
 
   /** @param {Resource} resource */
   balance(resource) {
-    return this.#storageUnits.get(resource) || 0;
+    return this.get(resource) || 0;
   }
 
   // copy() {

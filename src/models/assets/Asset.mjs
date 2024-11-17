@@ -1,7 +1,7 @@
 /** @typedef {import("../Resources.mjs").Resource} Resource */
 /** @typedef {import("../ActionExecutor.mjs").ActionExecutor} ActionExecutor */
 import { Action } from "../Action.mjs";
-import { assetsPlaced } from "../AssetDirectory.mjs";
+import { assetsPlaced, place, producersPlaced } from "../AssetDirectory.mjs";
 import { Stat } from "../Stat.mjs";
 import { StorageUnits } from "./StorageUnits.mjs";
 
@@ -41,8 +41,7 @@ export class Asset {
    */
   place() {
     this.#isPlaced = true;
-    assetsPlaced.add(this);
-    // TODO mixin other asset types
+    place(this);
   }
 
   /**

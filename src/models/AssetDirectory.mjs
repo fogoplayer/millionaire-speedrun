@@ -24,3 +24,24 @@ export const assetsPlaced = new Set();
 
 /** @param {Asset} asset  */
 export function register(asset) {}
+
+/** @param {Asset} asset  */
+export function place(asset) {
+  assetsPlaced.add(asset);
+  asset.produces.forEach((stat) => pushToMapEntry(producersPlaced, stat.resource, asset));
+  asset.consumes.forEach((stat) => pushToMapEntry(consumersPlaced, stat.resource, asset));
+  asset.storageUnits.forEach((_, key) => pushToMapEntry(storesPlaced, key, asset));
+}
+
+/**
+ *
+ * @param {Map<Resource, Asset[]>} map
+ * @param {Resource} key
+ * @param {Asset} asset
+ */
+function pushToMapEntry(map, key, asset) {
+  if (!map.get(key)) {
+    map.set(key, []);
+  }
+  map.get(key)?.push(asset);
+}

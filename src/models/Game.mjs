@@ -50,12 +50,13 @@ export class Game {
     /** @type {Record<string, number>} */
     const resourceTotals = {};
 
-    producersPlaced.forEach((assets, resource) => {
+    directory.forEach((assets, resource) => {
       resourceTotals[resource.description ?? ""] = assets.reduce(
         (total, asset) => total + asset.storageUnits.balance(resource),
         0
       );
     });
+    return resourceTotals;
   }
 
   printGameState() {
@@ -64,7 +65,8 @@ export class Game {
 Assets: ${state.assets}
 Production: ${JSON.stringify(state.productionTotals)}
 Consumption: ${JSON.stringify(state.consumptionTotals)}
-Storage: ${JSON.stringify(state.storageTotals)}`);
+Storage: ${JSON.stringify(state.storageTotals)}
+`);
   }
 }
 
