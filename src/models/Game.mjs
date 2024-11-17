@@ -2,6 +2,8 @@
 /** @typedef {import("./Resources.mjs").Resource} Resource */
 import { ActionExecutor } from "./ActionExecutor.mjs";
 import { assetsPlaced, consumersPlaced, producersPlaced, storesPlaced } from "./AssetDirectory.mjs";
+import { RamenFarmAsset } from "./assets/food/producers/RamenFarmAsset.mjs";
+import { Pantry } from "./assets/food/storage/Pantry.mjs";
 import { BronzeTradingPost } from "./assets/money/producers/BronzeTradingPost.mjs";
 import { CheckingAccount } from "./assets/money/storage/CheckingAccount.mjs";
 
@@ -73,4 +75,6 @@ Storage: ${JSON.stringify(state.storageTotals)}
 const game = new Game();
 game.placeAsset(new BronzeTradingPost(game.actionExecutor));
 game.placeAsset(new CheckingAccount(game.actionExecutor));
+game.placeAsset(new RamenFarmAsset(game.actionExecutor));
+game.placeAsset(new Pantry(game.actionExecutor));
 game.play();

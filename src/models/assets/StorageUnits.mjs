@@ -48,16 +48,16 @@ export class StorageUnits extends Map {
    * @returns {number | Error} the new balance, or the error that occurred
    */
   withdraw(resource, amount) {
-    const balance = this.get(resource) || 0;
     if (!this.#isValidKey(resource)) {
       return new InvalidResourceError(resource, this.parent);
     }
 
+    const balance = this.get(resource) || 0;
     if (balance < amount) {
       return new InsufficientResourceError(resource, this.parent);
     }
 
-    this.set(resource, -amount);
+    this.set(resource, balance - amount);
     return this.get(resource) || 0;
   }
 
