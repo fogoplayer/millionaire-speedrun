@@ -51,13 +51,9 @@ export class StorageUnits extends Map {
     if (!this.#isValidKey(resource)) {
       return new InvalidResourceError(resource, this.parent);
     }
-
     const balance = this.get(resource) || 0;
-    if (balance < amount) {
-      return new InsufficientResourceError(resource, this.parent);
-    }
 
-    this.set(resource, balance - amount);
+    this.set(resource, balance - amount); // we check for overdraw at the end of the transaction
     return this.get(resource) || 0;
   }
 
@@ -65,11 +61,6 @@ export class StorageUnits extends Map {
   balance(resource) {
     return this.get(resource) || 0;
   }
-
-  // copy() {
-  //   const copy = new StorageUnits(this.parent, [...this.validKeys]);
-  //   this.#storageUnits.forEach((value, key) => copy.deposit(key, value));
-  // }
 }
 
 export class InvalidResourceError extends Error {

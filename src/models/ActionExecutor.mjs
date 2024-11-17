@@ -7,7 +7,6 @@ export class ActionExecutor {
 
   /** @type {Action[]} */
   transactionQueue = [];
-  actionsInQueueExecuted = 0;
 
   /** @param {AssetDirectory} assetDirectory */
   constructor(assetDirectory) {
@@ -25,21 +24,22 @@ export class ActionExecutor {
   executeTransaction() {
     let noError = true;
 
-    for (
-      this.actionsInQueueExecuted = 0;
-      this.actionsInQueueExecuted < this.transactionQueue.length;
-      this.actionsInQueueExecuted++
-    ) {
-      const result = this.executeAction(this.transactionQueue[this.actionsInQueueExecuted]);
-      if (result instanceof Error) {
-        this.undoTransaction();
-        noError = false;
-        break;
-      }
-    }
+    this.transactionQueue.forEach((action) => {
+      this.executeAction(action);
+    });
+
+    this.assetDirectory.stores.forEach((assetSet) =>
+      assetSet.forEach((asset) =>
+        asset.storageUnits.forEach((balance) => {
+          noError = noError && balance >= 0;
+        })
+      )
+    );
 
     if (noError) {
       this.transactionHistory.push(this.transactionQueue);
+    } else {
+      this.undoTransaction();
     }
 
     this.actionsInQueueExecuted = 0; // redundant
@@ -61,8 +61,8 @@ export class ActionExecutor {
   }
 
   undoTransaction() {
-    for (let i = this.actionsInQueueExecuted - 1; i >= 0; i--) {
-      this.undoAction(this.transactionQueue[i]);
+    while (this.transactionQueue.length) {
+      this.undoAction(/** @type {Action} */ (this.transactionQueue.pop()));
     }
   }
 
