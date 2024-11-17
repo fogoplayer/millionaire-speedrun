@@ -1,11 +1,11 @@
+/** @typedef {import("../models/assets/Asset.mjs").Asset} Asset */
 import { LitElement, html, css } from "../libs/lit-all@2.7.6.js";
 import globalCss from "../global-styles/global.css.mjs";
-import { Scenario } from "../models/scenario-state/Scenario.mjs";
 import { BronzeTradingPost } from "../models/assets/money/producers/BronzeTradingPost.mjs";
 import { CheckingAccount } from "../models/assets/money/storage/CheckingAccount.mjs";
 import { RamenFarm } from "../models/assets/food/producers/RamenFarm.mjs";
 import { Pantry } from "../models/assets/food/storage/Pantry.mjs";
-import { currentScenario } from "../models/game-state/Game.mjs";
+import { currentScenario, setCurrentScenario } from "../models/game-state/Game.mjs";
 import * as GlobalAssetDirectory from "../models/game-state/GlobalAssetDirectory.mjs";
 
 export default class Home extends LitElement {
@@ -61,7 +61,12 @@ export default class Home extends LitElement {
                       <td>${[...asset.produces].map(([resource, amount]) => html`<p>${resource.description}: ${amount}</p>`)}</td>
                       <td>${[...asset.consumes].map(([resource, amount]) => html`<p>${resource.description}: ${amount}</p>`)}</td>
                       <td>${[...asset.storageUnits].map(([resource]) => html`<p>${resource.description}</p>`)}</td>
-                      <td><button>Add</button></button></td>
+                      <td><button @click=${() => {
+                        const Class = /** @type {new()=>Asset} */ (asset.constructor);
+                        const newAsset = this.scenario.spawnAsset(Class);
+                        this.scenario.placeAsset(newAsset);
+                        this.requestUpdate();
+                      }}>Add</button></button></td>
                     </tr>
                   </table>`
                   )}
@@ -71,7 +76,8 @@ export default class Home extends LitElement {
   }
 
   startGame() {
-    this.scenario = new Scenario();
+    setCurrentScenario();
+    this.scenario = currentScenario;
     this.scenario.onTickListeners.add(() => {
       this.requestUpdate();
     });

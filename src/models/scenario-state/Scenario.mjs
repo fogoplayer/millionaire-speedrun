@@ -38,9 +38,9 @@ export class Scenario {
     clearInterval(this.tickInterval);
   }
 
-  /** @param {new(a: ActionExecutor, b: ScenarioAssetDirectory) =>Asset} assetClass */
+  /** @param {new() =>Asset} assetClass */
   spawnAsset(assetClass) {
-    const asset = new assetClass(this.actionExecutor, this.assetDirectory);
+    const asset = new assetClass();
     return asset;
   }
 
