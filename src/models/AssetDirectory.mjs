@@ -5,18 +5,42 @@
 ////////////////
 // Game state //
 ////////////////
+export class AssetDirectory {
+  constructor() {
+    /** @type {Map<Resource, Asset[]>} */
+    this.producersPlaced = new Map();
 
-/** @type {Map<Resource, Asset[]>} */
-export const producersPlaced = new Map();
+    /** @type {Map<Resource, Asset[]>} */
+    this.consumersPlaced = new Map();
 
-/** @type {Map<Resource, Asset[]>} */
-export const consumersPlaced = new Map();
+    /** @type {Map<Resource, Asset[]>} */
+    this.storesPlaced = new Map();
 
-/** @type {Map<Resource, Asset[]>} */
-export const storesPlaced = new Map();
+    /** @type {Set<Asset>} */
+    this.assetsPlaced = new Set();
+  }
 
-/** @type {Set<Asset>} */
-export const assetsPlaced = new Set();
+  /** @param {Asset} asset  */
+  place(asset) {
+    this.assetsPlaced.add(asset);
+    asset.produces.forEach((_, resource) => this.pushToMapEntry(this.producersPlaced, resource, asset));
+    asset.consumes.forEach((_, resource) => this.pushToMapEntry(this.consumersPlaced, resource, asset));
+    asset.storageUnits.forEach((_, key) => this.pushToMapEntry(this.storesPlaced, key, asset));
+  }
+
+  /**
+   *
+   * @param {Map<Resource, Asset[]>} map
+   * @param {Resource} key
+   * @param {Asset} asset
+   */
+  pushToMapEntry(map, key, asset) {
+    if (!map.get(key)) {
+      map.set(key, []);
+    }
+    map.get(key)?.push(asset);
+  }
+}
 
 /////////////
 // Options //
@@ -24,24 +48,3 @@ export const assetsPlaced = new Set();
 
 /** @param {Asset} asset  */
 export function register(asset) {}
-
-/** @param {Asset} asset  */
-export function place(asset) {
-  assetsPlaced.add(asset);
-  asset.produces.forEach((_, resource) => pushToMapEntry(producersPlaced, resource, asset));
-  asset.consumes.forEach((_, resource) => pushToMapEntry(consumersPlaced, resource, asset));
-  asset.storageUnits.forEach((_, key) => pushToMapEntry(storesPlaced, key, asset));
-}
-
-/**
- *
- * @param {Map<Resource, Asset[]>} map
- * @param {Resource} key
- * @param {Asset} asset
- */
-function pushToMapEntry(map, key, asset) {
-  if (!map.get(key)) {
-    map.set(key, []);
-  }
-  map.get(key)?.push(asset);
-}

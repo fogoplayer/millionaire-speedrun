@@ -1,7 +1,7 @@
 /** @typedef {import("../Resources.mjs").Resource} Resource */
 /** @typedef {import("../ActionExecutor.mjs").ActionExecutor} ActionExecutor */
+/** @typedef {import("../AssetDirectory.mjs").AssetDirectory} AssetDirectory */
 import { Action } from "../Action.mjs";
-import { assetsPlaced, place, producersPlaced } from "../AssetDirectory.mjs";
 import { Stat } from "../Stat.mjs";
 import { StorageUnits } from "./StorageUnits.mjs";
 
@@ -21,15 +21,17 @@ export class Asset {
    *  consumes?: Stat<Consumes>[],
    *  stores?: (Stores | Stat<Stores>)[],
    *  actionExecutor: ActionExecutor
+   *  assetDirectory: AssetDirectory
    * }} params
    */
-  constructor({ name, produces = [], consumes = [], stores = [], actionExecutor }) {
+  constructor({ name, produces = [], consumes = [], stores = [], actionExecutor, assetDirectory }) {
     this.name = name;
     this.produces = new Map(produces.map((stat) => [stat.resource, stat.amount]));
     this.consumes = new Map(consumes.map((stat) => [stat.resource, stat.amount]));
     this.storageUnits = new StorageUnits(this, stores);
     // this.preTransactionStorageUnits = this.storageUnits.copy();
     this.actionExecutor = actionExecutor;
+    this.assetDirectory = assetDirectory;
   }
 
   ///////////////////////
@@ -41,7 +43,7 @@ export class Asset {
    */
   place() {
     this.#isPlaced = true;
-    place(this);
+    this.assetDirectory.place(this);
   }
 
   /**

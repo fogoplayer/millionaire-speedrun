@@ -14,10 +14,10 @@ export default class Home extends LitElement {
   constructor() {
     super();
     this.startGame();
-    this.game.placeAsset(new BronzeTradingPost(this.game.actionExecutor));
-    this.game.placeAsset(new CheckingAccount(this.game.actionExecutor));
-    this.game.placeAsset(new RamenFarmAsset(this.game.actionExecutor));
-    this.game.placeAsset(new Pantry(this.game.actionExecutor));
+    this.game.placeAsset(new BronzeTradingPost(this.game.actionExecutor, this.game.assetDirectory));
+    this.game.placeAsset(new CheckingAccount(this.game.actionExecutor, this.game.assetDirectory));
+    this.game.placeAsset(new RamenFarmAsset(this.game.actionExecutor, this.game.assetDirectory));
+    this.game.placeAsset(new Pantry(this.game.actionExecutor, this.game.assetDirectory));
   }
 
   game = new Game();

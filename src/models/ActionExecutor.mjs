@@ -1,5 +1,5 @@
+/** @typedef {import("./AssetDirectory.mjs").AssetDirectory} AssetDirectory */
 import { Action } from "./Action.mjs";
-import { storesPlaced } from "./AssetDirectory.mjs";
 
 export class ActionExecutor {
   /** @type {Action[][]} */
@@ -8,6 +8,11 @@ export class ActionExecutor {
   /** @type {Action[]} */
   transactionQueue = [];
   actionsInQueueExecuted = 0;
+
+  /** @param {AssetDirectory} assetDirectory */
+  constructor(assetDirectory) {
+    this.assetDirectory = assetDirectory;
+  }
 
   /**
    * adds multiple actions to the current transaction
@@ -47,7 +52,7 @@ export class ActionExecutor {
    * @returns {number | Error}
    */
   executeAction(action) {
-    let resourceStore = storesPlaced.get(action.resource)?.[0];
+    let resourceStore = this.assetDirectory.storesPlaced.get(action.resource)?.[0];
     if (!resourceStore) {
       console.warn(`Storage for ${action.resource.description} not found`);
       return -1;

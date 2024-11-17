@@ -1,14 +1,15 @@
 /** @typedef {import("./assets/Asset.mjs").Asset} Asset */
 /** @typedef {import("./Resources.mjs").Resource} Resource */
 import { ActionExecutor } from "./ActionExecutor.mjs";
-import { assetsPlaced, consumersPlaced, producersPlaced, storesPlaced } from "./AssetDirectory.mjs";
+import { AssetDirectory } from "./AssetDirectory.mjs";
 import { RamenFarmAsset } from "./assets/food/producers/RamenFarmAsset.mjs";
 import { Pantry } from "./assets/food/storage/Pantry.mjs";
 import { BronzeTradingPost } from "./assets/money/producers/BronzeTradingPost.mjs";
 import { CheckingAccount } from "./assets/money/storage/CheckingAccount.mjs";
 
 export class Game {
-  actionExecutor = new ActionExecutor();
+  assetDirectory = new AssetDirectory();
+  actionExecutor = new ActionExecutor(this.assetDirectory);
 
   /** @type {ReturnType<setInterval> | undefined} */
   tickInterval;
@@ -19,7 +20,7 @@ export class Game {
   onTickListeners = new Set();
 
   tick() {
-    assetsPlaced.forEach((asset) => {
+    this.assetDirectory.assetsPlaced.forEach((asset) => {
       asset.tick(this.#ticks);
     });
     const success = this.actionExecutor.executeTransaction();
@@ -49,16 +50,16 @@ export class Game {
   getGameState() {
     return {
       ticks: this.#ticks,
-      assets: [...assetsPlaced].map((asset) => asset.name).join(", "),
+      assets: [...this.assetDirectory.assetsPlaced].map((asset) => asset.name).join(", "),
       productionTotals: this.getDirectoryEntryTotals(
-        producersPlaced,
+        this.assetDirectory.producersPlaced,
         (asset, resource) => asset.produces.get(resource) || 0
       ),
       consumptionTotals: this.getDirectoryEntryTotals(
-        consumersPlaced,
+        this.assetDirectory.consumersPlaced,
         (asset, resource) => asset.consumes.get(resource) || 0
       ),
-      storageTotals: this.getDirectoryEntryTotals(storesPlaced, (asset, resource) =>
+      storageTotals: this.getDirectoryEntryTotals(this.assetDirectory.storesPlaced, (asset, resource) =>
         asset.storageUnits.balance(resource)
       ),
       toString() {
