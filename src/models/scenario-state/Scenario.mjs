@@ -2,10 +2,6 @@
 /** @typedef {import("../Resources.mjs").Resource} Resource */
 import { ActionExecutor } from "../ActionExecutor.mjs";
 import { ScenarioAssetDirectory } from "./ScenarioAssetDirectory.mjs";
-import { RamenFarm } from "../assets/food/producers/RamenFarm.mjs";
-import { Pantry } from "../assets/food/storage/Pantry.mjs";
-import { BronzeTradingPost } from "../assets/money/producers/BronzeTradingPost.mjs";
-import { CheckingAccount } from "../assets/money/storage/CheckingAccount.mjs";
 
 export class Scenario {
   assetDirectory = new ScenarioAssetDirectory();

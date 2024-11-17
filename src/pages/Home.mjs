@@ -5,6 +5,8 @@ import { BronzeTradingPost } from "../models/assets/money/producers/BronzeTradin
 import { CheckingAccount } from "../models/assets/money/storage/CheckingAccount.mjs";
 import { RamenFarm } from "../models/assets/food/producers/RamenFarm.mjs";
 import { Pantry } from "../models/assets/food/storage/Pantry.mjs";
+import { currentScenario } from "../models/game-state/Game.mjs";
+import * as GlobalAssetDirectory from "../models/game-state/GlobalAssetDirectory.mjs";
 
 export default class Home extends LitElement {
   static get properties() {
@@ -14,18 +16,18 @@ export default class Home extends LitElement {
   constructor() {
     super();
     this.startGame();
-    this.game.placeAsset(this.game.spawnAsset(BronzeTradingPost));
-    this.game.placeAsset(this.game.spawnAsset(CheckingAccount));
-    this.game.placeAsset(this.game.spawnAsset(RamenFarm));
-    this.game.placeAsset(this.game.spawnAsset(Pantry));
+    this.scenario.placeAsset(this.scenario.spawnAsset(BronzeTradingPost));
+    this.scenario.placeAsset(this.scenario.spawnAsset(CheckingAccount));
+    this.scenario.placeAsset(this.scenario.spawnAsset(RamenFarm));
+    this.scenario.placeAsset(this.scenario.spawnAsset(Pantry));
   }
 
-  game = new Scenario();
+  scenario = currentScenario;
 
   render() {
     return html`<header><h1>Millionaire Speedrun</h1></header>
       <main>
-        ${this.game
+        ${this.scenario
           .getGameState()
           .toString()
           .split("\n")
@@ -35,15 +37,42 @@ export default class Home extends LitElement {
           }, /** @type {any[]} */ ([]))}
       </main>
       <form action="#" @submit=${(e) => e.preventDefault()}>
-        <button @click=${() => this.game.play()}>Play</button>
-        <button @click=${() => this.game.pause()}>Pause</button>
+        <button @click=${() => this.scenario.play()}>Play</button>
+        <button @click=${() => this.scenario.pause()}>Pause</button>
         <button @click=${() => this.startGame()}>Restart</button>
-      </form>`;
+
+        
+          ${[...GlobalAssetDirectory.assetsByResource.entries()].map(
+            ([resource, assets]) =>
+              html` <h2>${resource.description}</h2>
+                <table>
+                  <tr>
+                    <th>Asset</th>
+                    <th>Produces</th>
+                    <th>Consumes</th>
+                    <th>Stores</th>
+                    <th>Action</th>
+                  </tr>
+                  ${[...assets].map(
+                    (asset) => html`
+            
+                    <tr>
+                      <td>${asset.name}</td>
+                      <td>${[...asset.produces].map(([resource, amount]) => html`<p>${resource.description}: ${amount}</p>`)}</td>
+                      <td>${[...asset.consumes].map(([resource, amount]) => html`<p>${resource.description}: ${amount}</p>`)}</td>
+                      <td>${[...asset.storageUnits].map(([resource]) => html`<p>${resource.description}</p>`)}</td>
+                      <td><button>Add</button></button></td>
+                    </tr>
+                  </table>`
+                  )}
+                </table>`
+          )}
+      </form`;
   }
 
   startGame() {
-    this.game = new Scenario();
-    this.game.onTickListeners.add(() => {
+    this.scenario = new Scenario();
+    this.scenario.onTickListeners.add(() => {
       this.requestUpdate();
     });
     this.requestUpdate();
@@ -54,6 +83,14 @@ export default class Home extends LitElement {
     css`
       button {
         padding: 1em;
+        border: 1px solid black;
+      }
+
+      table {
+        border-collapse: collapse;
+      }
+
+      td {
         border: 1px solid black;
       }
     `,
