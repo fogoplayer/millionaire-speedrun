@@ -19,7 +19,11 @@ export class Game {
     assetsPlaced.forEach((asset) => {
       asset.tick(this.#ticks);
     });
-    this.actionExecutor.executeTransaction();
+    const success = this.actionExecutor.executeTransaction();
+    if (!success) {
+      this.pause();
+      return;
+    }
     this.printGameState();
     this.#ticks++;
   }

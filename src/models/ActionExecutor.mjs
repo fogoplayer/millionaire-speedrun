@@ -18,6 +18,8 @@ export class ActionExecutor {
   }
 
   executeTransaction() {
+    let noError = true;
+
     for (
       this.actionsInQueueExecuted = 0;
       this.actionsInQueueExecuted < this.transactionQueue.length;
@@ -26,15 +28,18 @@ export class ActionExecutor {
       const result = this.executeAction(this.transactionQueue[this.actionsInQueueExecuted]);
       if (result instanceof Error) {
         this.undoTransaction();
+        noError = false;
+        break;
       }
     }
 
-    if (this.transactionQueue.length) {
+    if (noError) {
       this.transactionHistory.push(this.transactionQueue);
     }
 
     this.actionsInQueueExecuted = 0; // redundant
     this.transactionQueue = [];
+    return noError;
   }
 
   /**
