@@ -1,6 +1,6 @@
 import { LitElement, html, css } from "../libs/lit-all@2.7.6.js";
 import globalCss from "../global-styles/global.css.mjs";
-import { Game } from "../models/Game.mjs";
+import { Scenario } from "../models/Scenario.mjs";
 import { BronzeTradingPost } from "../models/assets/money/producers/BronzeTradingPost.mjs";
 import { CheckingAccount } from "../models/assets/money/storage/CheckingAccount.mjs";
 import { RamenFarm } from "../models/assets/food/producers/RamenFarm.mjs";
@@ -20,7 +20,7 @@ export default class Home extends LitElement {
     this.game.placeAsset(this.game.spawnAsset(Pantry));
   }
 
-  game = new Game();
+  game = new Scenario();
 
   render() {
     return html`<header><h1>Millionaire Speedrun</h1></header>
@@ -42,7 +42,7 @@ export default class Home extends LitElement {
   }
 
   startGame() {
-    this.game = new Game();
+    this.game = new Scenario();
     this.game.onTickListeners.add(() => {
       this.requestUpdate();
     });

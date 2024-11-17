@@ -7,7 +7,7 @@ import { Pantry } from "./assets/food/storage/Pantry.mjs";
 import { BronzeTradingPost } from "./assets/money/producers/BronzeTradingPost.mjs";
 import { CheckingAccount } from "./assets/money/storage/CheckingAccount.mjs";
 
-export class Game {
+export class Scenario {
   assetDirectory = new AssetDirectory();
   actionExecutor = new ActionExecutor(this.assetDirectory);
 
