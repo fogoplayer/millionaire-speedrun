@@ -43,11 +43,11 @@ export class Game {
       assets: [...assetsPlaced].map((asset) => asset.name).join(", "),
       productionTotals: this.getDirectoryEntryTotals(
         producersPlaced,
-        (asset, resource) => asset.produces.get(resource)?.amount || 0
+        (asset, resource) => asset.produces.get(resource) || 0
       ),
       consumptionTotals: this.getDirectoryEntryTotals(
         consumersPlaced,
-        (asset, resource) => asset.consumes.get(resource)?.amount || 0
+        (asset, resource) => asset.consumes.get(resource) || 0
       ),
       storageTotals: this.getDirectoryEntryTotals(storesPlaced, (asset, resource) =>
         asset.storageUnits.balance(resource)

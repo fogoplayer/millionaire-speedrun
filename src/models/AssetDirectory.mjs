@@ -28,8 +28,8 @@ export function register(asset) {}
 /** @param {Asset} asset  */
 export function place(asset) {
   assetsPlaced.add(asset);
-  asset.produces.forEach((stat) => pushToMapEntry(producersPlaced, stat.resource, asset));
-  asset.consumes.forEach((stat) => pushToMapEntry(consumersPlaced, stat.resource, asset));
+  asset.produces.forEach((_, resource) => pushToMapEntry(producersPlaced, resource, asset));
+  asset.consumes.forEach((_, resource) => pushToMapEntry(consumersPlaced, resource, asset));
   asset.storageUnits.forEach((_, key) => pushToMapEntry(storesPlaced, key, asset));
 }
 

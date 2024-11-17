@@ -25,8 +25,8 @@ export class Asset {
    */
   constructor({ name, produces = [], consumes = [], stores = [], actionExecutor }) {
     this.name = name;
-    this.produces = new Map(produces.map((stat) => [stat.resource, stat]));
-    this.consumes = new Map(consumes.map((stat) => [stat.resource, stat]));
+    this.produces = new Map(produces.map((stat) => [stat.resource, stat.amount]));
+    this.consumes = new Map(consumes.map((stat) => [stat.resource, stat.amount]));
     this.storageUnits = new StorageUnits(this, stores);
     // this.preTransactionStorageUnits = this.storageUnits.copy();
     this.actionExecutor = actionExecutor;
@@ -67,11 +67,11 @@ export class Asset {
       return;
     }
 
-    this.produces.forEach((stat) => {
-      this.emitAction(Action.DEPOSIT, stat.amount, stat.resource);
+    this.produces.forEach((amount, resource) => {
+      this.emitAction(Action.DEPOSIT, amount, resource);
     });
-    this.consumes.forEach((stat) => {
-      this.emitAction(Action.CONSUME, stat.amount, stat.resource);
+    this.consumes.forEach((amount, resource) => {
+      this.emitAction(Action.CONSUME, amount, resource);
     });
   }
 
