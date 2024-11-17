@@ -1,5 +1,5 @@
 /** @typedef {import("./Resources.mjs").Resource} Resource */
-/** @typedef {import("./assets/Asset.mjs").Asset<R>} Asset*/
+/** @typedef {import("./assets/Asset.mjs").Asset} Asset*/
 
 export class Action {
   static DEPOSIT = Symbol("produce");

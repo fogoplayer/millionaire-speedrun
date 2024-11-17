@@ -52,7 +52,7 @@ export class ActionExecutor {
    * @returns {number | Error}
    */
   executeAction(action) {
-    let resourceStore = this.assetDirectory.stores.get(action.resource)?.[0];
+    let resourceStore = this.assetDirectory.stores.get(action.resource)?.keys().next().value;
     if (!resourceStore) {
       console.warn(`Storage for ${action.resource.description} not found`);
       return -1;
