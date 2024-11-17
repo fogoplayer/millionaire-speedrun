@@ -3,7 +3,7 @@ import globalCss from "../global-styles/global.css.mjs";
 import { Game } from "../models/Game.mjs";
 import { BronzeTradingPost } from "../models/assets/money/producers/BronzeTradingPost.mjs";
 import { CheckingAccount } from "../models/assets/money/storage/CheckingAccount.mjs";
-import { RamenFarmAsset } from "../models/assets/food/producers/RamenFarmAsset.mjs";
+import { RamenFarm } from "../models/assets/food/producers/RamenFarm.mjs";
 import { Pantry } from "../models/assets/food/storage/Pantry.mjs";
 
 export default class Home extends LitElement {
@@ -16,7 +16,7 @@ export default class Home extends LitElement {
     this.startGame();
     this.game.placeAsset(this.game.spawnAsset(BronzeTradingPost));
     this.game.placeAsset(this.game.spawnAsset(CheckingAccount));
-    this.game.placeAsset(this.game.spawnAsset(RamenFarmAsset));
+    this.game.placeAsset(this.game.spawnAsset(RamenFarm));
     this.game.placeAsset(this.game.spawnAsset(Pantry));
   }
 

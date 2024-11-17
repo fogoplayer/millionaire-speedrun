@@ -2,6 +2,7 @@
 /** @typedef {import("../../../AssetDirectory.mjs").AssetDirectory} AssetDirectory */
 import { Asset } from "../../Asset.mjs";
 import * as Resources from "../../../Resources.mjs";
+import { register } from "../../../AssetDirectory.mjs";
 
 export class CheckingAccount extends Asset {
   /**

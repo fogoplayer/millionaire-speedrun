@@ -3,18 +3,18 @@
 import { Asset } from "../../Asset.mjs";
 import * as Resources from "../../../Resources.mjs";
 
-export class RamenFarmAsset extends Asset {
-   /**
+export class RamenFarm extends Asset {
+  /**
    * @param {ActionExecutor} actionExecutor
    * @param {AssetDirectory} assetDirectory
    */
-   constructor(actionExecutor, assetDirectory) {
+  constructor(actionExecutor, assetDirectory) {
     super({
       name: "Ramen Farm",
       produces: [{ resource: Resources.FOOD, amount: 10 }],
       consumes: [{ resource: Resources.MONEY, amount: 3 }],
       actionExecutor,
-      assetDirectory
+      assetDirectory,
     });
   }
 

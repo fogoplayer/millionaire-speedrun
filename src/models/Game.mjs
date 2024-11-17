@@ -2,7 +2,7 @@
 /** @typedef {import("./Resources.mjs").Resource} Resource */
 import { ActionExecutor } from "./ActionExecutor.mjs";
 import { AssetDirectory } from "./AssetDirectory.mjs";
-import { RamenFarmAsset } from "./assets/food/producers/RamenFarmAsset.mjs";
+import { RamenFarm } from "./assets/food/producers/RamenFarm.mjs";
 import { Pantry } from "./assets/food/storage/Pantry.mjs";
 import { BronzeTradingPost } from "./assets/money/producers/BronzeTradingPost.mjs";
 import { CheckingAccount } from "./assets/money/storage/CheckingAccount.mjs";
