@@ -5,14 +5,12 @@ import * as Resources from "../../../Resources.mjs";
 import { register } from "../../../game-state/GlobalAssetDirectory.mjs";
 
 export class CheckingAccount extends Asset {
-  /**
-   * @param {ActionExecutor} actionExecutor
-   * @param {AssetDirectory} assetDirectory
-   */
-  constructor(actionExecutor, assetDirectory) {
+  constructor() {
     super({
       name: "Checking Account",
       stores: [Resources.MONEY],
     });
   }
 }
+
+register(new CheckingAccount());
