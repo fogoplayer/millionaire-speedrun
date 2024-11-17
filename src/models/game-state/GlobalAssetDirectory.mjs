@@ -1,5 +1,5 @@
-/** @typedef {import("./Resources.mjs").Resource} Resource */
-/** @typedef {import("./assets/Asset.mjs").Asset} Asset */
+/** @typedef {import("../Resources.mjs").Resource} Resource */
+/** @typedef {import("../assets/Asset.mjs").Asset} Asset */
 
 /** @type {Map<Resource, Set<Asset>>} */
 export const assetsByResource = new Map();

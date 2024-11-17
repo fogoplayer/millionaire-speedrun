@@ -1,4 +1,4 @@
-/** @typedef {import("./ScenarioAssetDirectory.mjs").ScenarioAssetDirectory} AssetDirectory */
+/** @typedef {import("./scenario-state/ScenarioAssetDirectory.mjs").ScenarioAssetDirectory} AssetDirectory */
 import { Action } from "./Action.mjs";
 
 export class ActionExecutor {

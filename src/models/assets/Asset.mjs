@@ -1,6 +1,6 @@
 /** @typedef {import("../Resources.mjs").Resource} Resource */
 /** @typedef {import("../ActionExecutor.mjs").ActionExecutor} ActionExecutor */
-/** @typedef {import("../ScenarioAssetDirectory.mjs").ScenarioAssetDirectory} AssetDirectory */
+/** @typedef {import("../scenario-state/ScenarioAssetDirectory.mjs").ScenarioAssetDirectory} AssetDirectory */
 import { Action } from "../Action.mjs";
 import { Stat } from "../Stat.mjs";
 import { StorageUnits } from "./StorageUnits.mjs";

@@ -1,6 +1,6 @@
 import { LitElement, html, css } from "../libs/lit-all@2.7.6.js";
 import globalCss from "../global-styles/global.css.mjs";
-import { Scenario } from "../models/Scenario.mjs";
+import { Scenario } from "../models/scenario-state/Scenario.mjs";
 import { BronzeTradingPost } from "../models/assets/money/producers/BronzeTradingPost.mjs";
 import { CheckingAccount } from "../models/assets/money/storage/CheckingAccount.mjs";
 import { RamenFarm } from "../models/assets/food/producers/RamenFarm.mjs";

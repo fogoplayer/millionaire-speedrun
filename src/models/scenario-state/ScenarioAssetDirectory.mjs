@@ -1,8 +1,8 @@
-/** @typedef {import("./Resources.mjs").Resource} Resource */
-/** @typedef {import("./Stat.mjs").Stat<R>} Stat @template {Resource} R*/
-/** @typedef {import("./assets/Asset.mjs").Asset} Asset */
+/** @typedef {import("../Resources.mjs").Resource} Resource */
+/** @typedef {import("../Stat.mjs").Stat<R>} Stat @template {Resource} R*/
+/** @typedef {import("../assets/Asset.mjs").Asset} Asset */
 
-import { pushToMapEntry } from "./GlobalAssetDirectory.mjs";
+import { pushToMapEntry } from "../game-state/GlobalAssetDirectory.mjs";
 
 export class ScenarioAssetDirectory {
   constructor() {
