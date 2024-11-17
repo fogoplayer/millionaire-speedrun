@@ -13,8 +13,6 @@ export class CheckingAccount extends Asset {
     super({
       name: "Checking Account",
       stores: [Resources.MONEY],
-      actionExecutor,
-      assetDirectory,
     });
   }
 }

@@ -13,8 +13,6 @@ export class RamenFarm extends Asset {
       name: "Ramen Farm",
       produces: [{ resource: Resources.FOOD, amount: 10 }],
       consumes: [{ resource: Resources.MONEY, amount: 3 }],
-      actionExecutor,
-      assetDirectory,
     });
   }
 

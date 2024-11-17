@@ -9,6 +9,6 @@ export class Pantry extends Asset {
    * @param {AssetDirectory} assetDirectory
    */
   constructor(actionExecutor, assetDirectory) {
-    super({ name: "Pantry", stores: [Resources.FOOD], actionExecutor, assetDirectory });
+    super({ name: "Pantry", stores: [Resources.FOOD] });
   }
 }

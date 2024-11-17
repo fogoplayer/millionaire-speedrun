@@ -12,8 +12,6 @@ export class BronzeTradingPost extends Asset {
     super({
       name: "Bronze Trading Post",
       produces: [{ resource: Resources.MONEY, amount: 10 }],
-      actionExecutor,
-      assetDirectory,
     });
   }
 }

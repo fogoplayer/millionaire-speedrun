@@ -1,7 +1,8 @@
 /** @typedef {import("../Resources.mjs").Resource} Resource */
 /** @typedef {import("../ActionExecutor.mjs").ActionExecutor} ActionExecutor */
-/** @typedef {import("../scenario-state/ScenarioAssetDirectory.mjs").ScenarioAssetDirectory} AssetDirectory */
+/** @typedef {import("../scenario-state/Scenario.mjs").Scenario} Scenario */
 import { Action } from "../Action.mjs";
+import { currentScenario } from "../game-state/Game.mjs";
 import { Stat } from "../Stat.mjs";
 import { StorageUnits } from "./StorageUnits.mjs";
 
@@ -20,18 +21,17 @@ export class Asset {
    *  produces?: Stat<Produces>[],
    *  consumes?: Stat<Consumes>[],
    *  stores?: (Stores | Stat<Stores>)[],
-   *  actionExecutor: ActionExecutor
-   *  assetDirectory: AssetDirectory
+   *  scenario?: Scenario
    * }} params
    */
-  constructor({ name, produces = [], consumes = [], stores = [], actionExecutor, assetDirectory }) {
+  constructor({ name, produces = [], consumes = [], stores = [], scenario = currentScenario }) {
     this.name = name;
     this.produces = new Map(produces.map((stat) => [stat.resource, stat.amount]));
     this.consumes = new Map(consumes.map((stat) => [stat.resource, stat.amount]));
     this.storageUnits = new StorageUnits(this, stores);
     // this.preTransactionStorageUnits = this.storageUnits.copy();
-    this.actionExecutor = actionExecutor;
-    this.assetDirectory = assetDirectory;
+    this.actionExecutor = scenario.actionExecutor;
+    this.assetDirectory = scenario.assetDirectory;
   }
 
   ///////////////////////

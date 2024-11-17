@@ -1,6 +1,5 @@
 import { Scenario } from "../scenario-state/Scenario.mjs";
 
-/** @type {Set<Scenario>} */
-const scenarios = new Set([new Scenario()]); // May want to convert this to a list if only ever used in the UI
+export let currentScenario = new Scenario();
 
-const currentScenario = scenarios.values().next().value;
+const scenarios = [currentScenario]; // May want to convert this to a list if only ever used in the UI
