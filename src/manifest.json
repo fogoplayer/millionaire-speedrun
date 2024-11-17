@@ -1,6 +1,6 @@
 {
-  "name": "%project-name%",
-  "short_name": "%project-name%",
+  "name": "millionaire-speedrun",
+  "short_name": "millionaire-speedrun",
   "icons": [
     {
       "src": "",

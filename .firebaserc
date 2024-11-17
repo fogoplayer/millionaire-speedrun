@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "%project-name%",
-    "prod": "%project-name%"
+    "default": "millionaire-speedrun",
+    "prod": "millionaire-speedrun"
   }
 }
