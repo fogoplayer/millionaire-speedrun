@@ -80,7 +80,7 @@ Storage: ${JSON.stringify(this.storageTotals, null, 2)}
   }
 
   /**
-   * @param {Map<Resource, Asset[]>} directory
+   * @param {Map<Resource, Set<Asset>>} directory
    * @param {(asset: Asset, resource: Resource) => number} extractor
    */
   getDirectoryEntryTotals(directory, extractor) {
@@ -88,7 +88,7 @@ Storage: ${JSON.stringify(this.storageTotals, null, 2)}
     const resourceTotals = {};
 
     directory.forEach((assets, resource) => {
-      resourceTotals[resource.description ?? ""] = assets.reduce(
+      resourceTotals[resource.description ?? ""] = [...assets].reduce(
         (total, asset) => total + extractor(asset, resource),
         0
       );
