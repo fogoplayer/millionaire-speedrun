@@ -1,5 +1,6 @@
-export const MONEY = Symbol("money");
-export const FOOD = Symbol("food");
-export const HAPPINESS = Symbol("happiness");
-
-/** @typedef {import("./Resources.mjs")[keyof import("./Resources.mjs")]} Resource */
+export const Resources = /** @type {const} */ ({
+  MONEY: Symbol("money"),
+  FOOD: Symbol("food"),
+  HAPPINESS: Symbol("happiness"),
+});
+/** @typedef {[keyof typeof Resources]} Resource */

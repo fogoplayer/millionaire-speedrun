@@ -1,7 +1,7 @@
 /** @typedef {import("../../../ActionExecutor.mjs").ActionExecutor} ActionExecutor */
 /** @typedef {import("../../../scenario-state/ScenarioAssetDirectory.mjs").ScenarioAssetDirectory} AssetDirectory */
 import { Asset } from "../../Asset.mjs";
-import * as Resources from "../../../Resources.mjs";
+import { Resources } from "../../../Resources.mjs";
 import { register } from "../../../game-state/GlobalAssetDirectory.mjs";
 import { Action } from "../../../Action.mjs";
 import { Investment } from "./Investment.mjs";
