@@ -6,7 +6,7 @@ import { register } from "../../../game-state/GlobalAssetDirectory.mjs";
 
 export class Pantry extends Asset {
   constructor() {
-    super({ name: "Pantry", stores: [Resources.FOOD] });
+    super({ prettyName: "Pantry", stores: [Resources.FOOD] });
   }
 }
 

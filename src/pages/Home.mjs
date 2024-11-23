@@ -58,7 +58,7 @@ export default class Home extends LitElement {
                     (asset) => html`
             
                     <tr>
-                      <td>${asset.name}</td>
+                      <td>${asset.prettyName}</td>
                       <td>${[...asset.produces].map(([resource, amount]) => html`<p>${resource.description}: ${amount}</p>`)}</td>
                       <td>${[...asset.consumes].map(([resource, amount]) => html`<p>${resource.description}: ${amount}</p>`)}</td>
                       <td>${[...asset.storageUnits].map(([resource]) => html`<p>${resource.description}</p>`)}</td>

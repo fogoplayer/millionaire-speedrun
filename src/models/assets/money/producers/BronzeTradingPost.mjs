@@ -7,7 +7,7 @@ import { register } from "../../../game-state/GlobalAssetDirectory.mjs";
 export class BronzeTradingPost extends Asset {
   constructor() {
     super({
-      name: "Bronze Trading Post",
+      prettyName: "Bronze Trading Post",
       produces: [{ resource: Resources.MONEY, amount: 10 }],
     });
   }

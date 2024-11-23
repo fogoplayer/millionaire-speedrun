@@ -7,7 +7,7 @@ import { register } from "../../../game-state/GlobalAssetDirectory.mjs";
 export class RamenFarm extends Asset {
   constructor() {
     super({
-      name: "Ramen Farm",
+      prettyName: "Ramen Farm",
       produces: [{ resource: Resources.FOOD, amount: 10 }],
       consumes: [
         { resource: Resources.MONEY, amount: 3 },

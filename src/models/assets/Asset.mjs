@@ -13,19 +13,40 @@ import { StorageUnits } from "./StorageUnits.mjs";
  * @template {Resource} [Stores=Resource]
  */
 export class Asset {
+  /** @type {string} @abstract */
+  static prettyName = "";
+
+  /** @type {Stat<Resource>[]} @abstract */
+  static produces = [];
+  /** @type {Stat<Resource>[]} @abstract */
+  static consumes = [];
+  /** @type {Resource[] | Stat<Resource>[]} @abstract */
+  static stores = [];
+
   #isPlaced = false;
 
   /**
    * @param {{
-   *  name: string,
+   *  prettyName: string,
    *  produces?: Stat<Produces>[],
    *  consumes?: Stat<Consumes>[],
    *  stores?: (Stores | Stat<Stores>)[],
    *  scenario?: Scenario
    * }} params
+   *
    */
-  constructor({ name, produces = [], consumes = [], stores = [], scenario = currentScenario }) {
-    this.name = name;
+  constructor({
+    // @ts-ignore Typescript has bad support for this.constructor
+    prettyName = this.constructor.prettyName,
+    // @ts-ignore Typescript has bad support for this.constructor
+    produces = this.constructor.produces,
+    // @ts-ignore Typescript has bad support for this.constructor
+    consumes = this.constructor.consumes,
+    // @ts-ignore Typescript has bad support for this.constructor
+    stores = this.constructor.stores,
+    scenario = currentScenario,
+  }) {
+    this.prettyName = prettyName;
     this.produces = new Map(produces.map((stat) => [stat.resource, stat.amount]));
     this.consumes = new Map(consumes.map((stat) => [stat.resource, stat.amount]));
     this.storageUnits = new StorageUnits(this, stores);

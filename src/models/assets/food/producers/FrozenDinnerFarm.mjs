@@ -7,7 +7,7 @@ import { register } from "../../../game-state/GlobalAssetDirectory.mjs";
 export class FrozenDinnerFarm extends Asset {
   constructor() {
     super({
-      name: "Frozen Dinner Farm",
+      prettyName: "Frozen Dinner Farm",
       produces: [{ resource: Resources.FOOD, amount: 10 }],
       consumes: [{ resource: Resources.MONEY, amount: 150 }],
     });

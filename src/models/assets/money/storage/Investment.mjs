@@ -13,7 +13,7 @@ export class Investment extends Asset {
    */
   constructor(name, interestRate) {
     super({
-      name,
+      prettyName: name,
       produces: [{ resource: Resources.MONEY, amount: 0 }],
       stores: [Resources.MONEY],
     });

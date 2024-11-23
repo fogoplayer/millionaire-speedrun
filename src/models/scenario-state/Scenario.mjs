@@ -52,7 +52,7 @@ export class Scenario {
   getGameState() {
     return {
       ticks: this.#ticks,
-      assets: [...this.assetDirectory.assets].map((asset) => asset.name).join(", "),
+      assets: [...this.assetDirectory.assets].map((asset) => asset.prettyName).join(", "),
       productionTotals: this.getDirectoryEntryTotals(
         this.assetDirectory.producers,
         (asset, resource) => asset.produces.get(resource) || 0
