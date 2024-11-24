@@ -26,23 +26,13 @@ export class Asset {
   #isPlaced = false;
 
   /**
-   * @typedef {{
+   * @param {{
    *    prettyName: string,
    *    produces?: Stat<Produces>[],
    *    consumes?: Stat<Consumes>[],
    *    stores?: (Stores | Stat<Stores>)[],
    *    scenario?: Scenario
-   *  }} AssetParams
-   *
-   * @type {{
-   *    new (params: AssetParams): (params: AssetParams) => Asset<Produces, Consumes, Stores>
-   *    prettyName: string;
-   *    produces: Stat<Produces>[];
-   *    consumes: Stat<Consumes>[];
-   *    stores: Stores[] |Stat<Stores>[]
-   *  }}
-   *
-   * @param {AssetParams} params
+   *  }} params
    */
   constructor(
     {
