@@ -8,8 +8,8 @@ export class Investment extends Asset {
   static interestRate = 0;
   static stores = [Resources.MONEY];
 
-  /** @param {number | undefined} interestRate */
-  constructor(interestRate) {
+  /** @param {number} [interestRate] */
+  constructor(interestRate = undefined) {
     super();
     this.interestRate = interestRate ?? this.constructor.interestRate;
   }
