@@ -3,4 +3,4 @@ export const Resources = /** @type {const} */ ({
   FOOD: Symbol("food"),
   HAPPINESS: Symbol("happiness"),
 });
-/** @typedef {[keyof typeof Resources]} Resource */
+/** @typedef {Resources[keyof typeof Resources]} Resource */

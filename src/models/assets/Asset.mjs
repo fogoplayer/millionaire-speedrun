@@ -35,17 +35,29 @@ export class Asset {
    * }} params
    *
    */
-  constructor({
-    // @ts-ignore Typescript has bad support for this.constructor
-    prettyName = this.constructor.prettyName,
-    // @ts-ignore Typescript has bad support for this.constructor
-    produces = this.constructor.produces,
-    // @ts-ignore Typescript has bad support for this.constructor
-    consumes = this.constructor.consumes,
-    // @ts-ignore Typescript has bad support for this.constructor
-    stores = this.constructor.stores,
-    scenario = currentScenario,
-  }) {
+  constructor(
+    {
+      // @ts-ignore Typescript has bad support for this.constructor
+      prettyName = this.constructor.prettyName,
+      // @ts-ignore Typescript has bad support for this.constructor
+      produces = this.constructor.produces,
+      // @ts-ignore Typescript has bad support for this.constructor
+      consumes = this.constructor.consumes,
+      // @ts-ignore Typescript has bad support for this.constructor
+      stores = this.constructor.stores,
+      scenario = currentScenario,
+    } = {
+      // @ts-ignore Typescript has bad support for this.constructor
+      prettyName: this.constructor.prettyName,
+      // @ts-ignore Typescript has bad support for this.constructor
+      produces: this.constructor.produces,
+      // @ts-ignore Typescript has bad support for this.constructor
+      consumes: this.constructor.consumes,
+      // @ts-ignore Typescript has bad support for this.constructor
+      stores: this.constructor.stores,
+      scenario: currentScenario,
+    }
+  ) {
     this.prettyName = prettyName;
     this.produces = new Map(produces.map((stat) => [stat.resource, stat.amount]));
     this.consumes = new Map(consumes.map((stat) => [stat.resource, stat.amount]));
