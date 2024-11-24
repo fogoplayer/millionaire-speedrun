@@ -1,17 +1,11 @@
-/** @typedef {import("../../../ActionExecutor.mjs").ActionExecutor} ActionExecutor */
-/** @typedef {import("../../../scenario-state/ScenarioAssetDirectory.mjs").ScenarioAssetDirectory} AssetDirectory */
 import { Asset } from "../../Asset.mjs";
 import { Resources } from "../../../Resources.mjs";
 import { register } from "../../../game-state/GlobalAssetDirectory.mjs";
 
 export class FrozenDinnerFarm extends Asset {
-  constructor() {
-    super({
-      prettyName: "Frozen Dinner Farm",
-      produces: [{ resource: Resources.FOOD, amount: 10 }],
-      consumes: [{ resource: Resources.MONEY, amount: 150 }],
-    });
-  }
+  static prettyName = "Frozen Dinner Farm";
+  static produces = [{ resource: Resources.FOOD, amount: 10 }];
+  static consumes = [{ resource: Resources.MONEY, amount: 150 }];
 }
 
-register(new FrozenDinnerFarm());
+register(FrozenDinnerFarm);

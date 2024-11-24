@@ -1,24 +1,17 @@
-/** @typedef {import("../../../ActionExecutor.mjs").ActionExecutor} ActionExecutor */
-/** @typedef {import("../../../scenario-state/ScenarioAssetDirectory.mjs").ScenarioAssetDirectory} AssetDirectory */
 import { Asset } from "../../Asset.mjs";
 import { Resources } from "../../../Resources.mjs";
-import { register } from "../../../game-state/GlobalAssetDirectory.mjs";
-import { Action } from "../../../Action.mjs";
 
 /** @abstract */
 export class Investment extends Asset {
-  /**
-   * @param {string} name
-   * @param {number} interestRate
-   */
-  constructor(name, interestRate) {
-    super({
-      prettyName: name,
-      produces: [{ resource: Resources.MONEY, amount: 0 }],
-      stores: [Resources.MONEY],
-    });
+  static produces = [{ resource: Resources.MONEY, amount: 0 }];
+  /** @abstract */
+  static interestRate = 0;
+  static stores = [Resources.MONEY];
 
-    this.interestRate = interestRate;
+  /** @param {number | undefined} interestRate */
+  constructor(interestRate) {
+    super();
+    this.interestRate = interestRate ?? this.constructor.interestRate;
   }
 
   /** @param {number} tick  */

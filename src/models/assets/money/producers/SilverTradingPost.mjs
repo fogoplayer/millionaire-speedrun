@@ -1,16 +1,10 @@
-/** @typedef {import("../../../ActionExecutor.mjs").ActionExecutor} ActionExecutor */
-/** @typedef {import("../../../scenario-state/ScenarioAssetDirectory.mjs").ScenarioAssetDirectory} AssetDirectory */
 import { Asset } from "../../Asset.mjs";
 import { Resources } from "../../../Resources.mjs";
 import { register } from "../../../game-state/GlobalAssetDirectory.mjs";
 
 export class SilverTradingPost extends Asset {
-  constructor() {
-    super({
-      prettyName: "Silver Trading Post",
-      produces: [{ resource: Resources.MONEY, amount: 100 }],
-    });
-  }
+  static prettyName = "Silver Trading Post";
+  static produces = [{ resource: Resources.MONEY, amount: 100 }];
 }
 
-register(new SilverTradingPost());
+register(SilverTradingPost);
