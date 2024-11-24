@@ -20,5 +20,6 @@ export class Investment extends Asset {
       return;
     }
     this.produces.set(Resources.MONEY, (this.storageUnits.get(Resources.MONEY) ?? 0) * this.interestRate);
+    super.tick(tick);
   }
 }

@@ -70,7 +70,7 @@ export default class Home extends LitElement {
                           </p>`
                       )}</td>
                       <td><button @click=${() => {
-                        const Class = /** @type {new()=>Asset} */ (asset.constructor);
+                        const Class = /** @type {new()=>Asset} */ (asset);
                         const newAsset = this.scenario.spawnAsset(Class);
                         this.scenario.placeAsset(newAsset);
                         this.requestUpdate();
