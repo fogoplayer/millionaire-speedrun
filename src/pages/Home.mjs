@@ -8,6 +8,7 @@ import { RamenFarm } from "../models/assets/food/producers/RamenFarm.mjs";
 import { Pantry } from "../models/assets/food/storage/Pantry.mjs";
 import { currentScenario, setCurrentScenario } from "../models/game-state/Game.mjs";
 import * as GlobalAssetDirectory from "../models/game-state/GlobalAssetDirectory.mjs";
+import { Stat } from "../models/Stat.mjs";
 
 export default class Home extends LitElement {
   static get properties() {
@@ -42,26 +43,32 @@ export default class Home extends LitElement {
         <button @click=${() => this.scenario.pause()}>Pause</button>
         <button @click=${() => this.startGame()}>Restart</button>
 
-        
-          ${[...GlobalAssetDirectory.assetsByResource.entries()].map(
-            ([resource, assets]) =>
-              html` <h2>${resource.description}</h2>
-                <table>
-                  <tr>
-                    <th>Asset</th>
-                    <th>Produces</th>
-                    <th>Consumes</th>
-                    <th>Stores</th>
-                    <th>Action</th>
-                  </tr>
-                  ${[...assets].map(
-                    (asset) => html`
+        ${[...GlobalAssetDirectory.assetsByResource.entries()].map(
+          ([resource, assets]) =>
+            html` <h2>${resource.description}</h2>
+              <table>
+                <tr>
+                  <th>Asset</th>
+                  <th>Produces</th>
+                  <th>Consumes</th>
+                  <th>Stores</th>
+                  <th>Action</th>
+                </tr>
+                ${[...assets].map(
+                  (asset) => html`
             
                     <tr>
                       <td>${asset.prettyName}</td>
-                      <td>${[...asset.produces].map(([resource, amount]) => html`<p>${resource.description}: ${amount}</p>`)}</td>
-                      <td>${[...asset.consumes].map(([resource, amount]) => html`<p>${resource.description}: ${amount}</p>`)}</td>
-                      <td>${[...asset.storageUnits].map(([resource]) => html`<p>${resource.description}</p>`)}</td>
+                      <td>${[...asset.produces].map(({ resource, amount }) => html`<p>${resource.description}: ${amount}</p>`)}</td>
+                      <td>${[...asset.consumes].map(({ resource, amount }) => html`<p>${resource.description}: ${amount}</p>`)}</td>
+                      <td>${[...asset.stores].map(
+                        (statOrResource) =>
+                          html`<p>
+                            ${statOrResource instanceof Stat
+                              ? statOrResource.resource.description
+                              : statOrResource.description}
+                          </p>`
+                      )}</td>
                       <td><button @click=${() => {
                         const Class = /** @type {new()=>Asset} */ (asset.constructor);
                         const newAsset = this.scenario.spawnAsset(Class);
@@ -70,10 +77,10 @@ export default class Home extends LitElement {
                       }}>Add</button></button></td>
                     </tr>
                   </table>`
-                  )}
-                </table>`
-          )}
-      </form`;
+                )}
+              </table>`
+        )}
+      </form>`;
   }
 
   startGame() {

@@ -12,4 +12,4 @@ export class CaviarFarm extends Asset {
   static consumes = [{ resource: /** @type {Resource} */ (Resources.MONEY), amount: 3 }];
 }
 
-register(new CaviarFarm());
+register(CaviarFarm);
