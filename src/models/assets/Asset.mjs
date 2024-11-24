@@ -113,7 +113,9 @@ export class Asset {
    * Destroys the asset
    * @param {number} tick
    */
-  destroy = abstractMethodShouldBeImplemented;
+  destroy(tick) {
+    this.assetDirectory.destroy(this);
+  }
 
   ////////////////////
   // Action methods //
