@@ -1,6 +1,8 @@
 /** @typedef {import("../assets/Asset.mjs").Asset} Asset */
 /** @typedef {import("../Resources.mjs").Resource} Resource */
 import { ActionExecutor } from "../ActionExecutor.mjs";
+import { BasicHumanNeeds } from "../assets/BasicHumanNeeds.mjs";
+import { Resources } from "../Resources.mjs";
 import { ScenarioAssetDirectory } from "./ScenarioAssetDirectory.mjs";
 
 export class Scenario {
@@ -16,6 +18,12 @@ export class Scenario {
   onTickListeners = new Set();
 
   tick() {
+    // Circular dependency if we create BasicHumanNeeds in the constructor
+    // Instead, we check every tick if it exists and place it if it doesn't
+    if (!this.assetDirectory.stores.has(Resources.HAPPINESS)) {
+      this.assetDirectory.place(new BasicHumanNeeds({ scenario: this }));
+    }
+
     this.assetDirectory.assets.forEach((asset) => {
       asset.tick(this.#ticks);
     });
@@ -38,9 +46,9 @@ export class Scenario {
     clearInterval(this.tickInterval);
   }
 
-  /** @param {new() =>Asset} assetClass */
+  /** @param {new({scenario}: {scenario: Scenario}) => Asset} assetClass */
   spawnAsset(assetClass) {
-    const asset = new assetClass();
+    const asset = new assetClass({ scenario: this });
     return asset;
   }
 

@@ -26,37 +26,26 @@ export class Asset {
   #isPlaced = false;
 
   /**
+   *
    * @param {{
-   *    prettyName: string,
+   *    prettyName?: string,
    *    produces?: Stat<Produces>[],
    *    consumes?: Stat<Consumes>[],
    *    stores?: (Stores | Stat<Stores>)[],
-   *    scenario?: Scenario
-   *  }} params
+   *    scenario: Scenario
+   *  }} param0
    */
-  constructor(
-    {
-      // @ts-ignore Typescript has bad support for this.constructor
-      prettyName = this.constructor.prettyName,
-      // @ts-ignore Typescript has bad support for this.constructor
-      produces = this.constructor.produces,
-      // @ts-ignore Typescript has bad support for this.constructor
-      consumes = this.constructor.consumes,
-      // @ts-ignore Typescript has bad support for this.constructor
-      stores = this.constructor.stores,
-      scenario = currentScenario,
-    } = {
-      // @ts-ignore Typescript has bad support for this.constructor
-      prettyName: this.constructor.prettyName,
-      // @ts-ignore Typescript has bad support for this.constructor
-      produces: this.constructor.produces,
-      // @ts-ignore Typescript has bad support for this.constructor
-      consumes: this.constructor.consumes,
-      // @ts-ignore Typescript has bad support for this.constructor
-      stores: this.constructor.stores,
-      scenario: currentScenario,
-    }
-  ) {
+  constructor({
+    // @ts-ignore Typescript has bad support for this.constructor
+    prettyName = this.constructor.prettyName,
+    // @ts-ignore Typescript has bad support for this.constructor
+    produces = this.constructor.produces,
+    // @ts-ignore Typescript has bad support for this.constructor
+    consumes = this.constructor.consumes,
+    // @ts-ignore Typescript has bad support for this.constructor
+    stores = this.constructor.stores,
+    scenario,
+  }) {
     this.prettyName = prettyName;
     this.produces = new Map(produces.map((stat) => [stat.resource, stat.amount]));
     this.consumes = new Map(consumes.map((stat) => [stat.resource, stat.amount]));

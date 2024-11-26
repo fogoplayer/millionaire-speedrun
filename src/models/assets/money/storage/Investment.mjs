@@ -1,3 +1,4 @@
+/** @typedef {import("../../../scenario-state/Scenario.mjs").Scenario} Scenario */
 import { Asset } from "../../Asset.mjs";
 import { Resources } from "../../../Resources.mjs";
 
@@ -8,9 +9,14 @@ export class Investment extends Asset {
   static interestRate = 0;
   static stores = [Resources.MONEY];
 
-  /** @param {number} [interestRate] */
-  constructor(interestRate = undefined) {
-    super();
+  /**
+   * @param {{
+   *    interestRate?: number,
+   *    scenario: Scenario
+   *  }} param0
+   */
+  constructor({ interestRate = undefined, scenario }) {
+    super({ scenario });
     this.interestRate = interestRate ?? this.constructor.interestRate;
   }
 
