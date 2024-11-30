@@ -10,6 +10,7 @@ import { Pantry } from "../models/assets/food/storage/Pantry.mjs";
 import { currentScenario, setCurrentScenario } from "../models/game-state/Game.mjs";
 import * as GlobalAssetDirectory from "../models/game-state/GlobalAssetDirectory.mjs";
 import { Stat } from "../models/Stat.mjs";
+import { Resources } from "../models/Resources.mjs";
 
 export default class Home extends LitElement {
   static get properties() {
@@ -29,6 +30,42 @@ export default class Home extends LitElement {
 
   render() {
     return html`<header><h1>Millionaire Speedrun</h1></header>
+      <main>
+        <aside>
+          <table>
+            <tr>
+              <th>Resource</th>
+              <th>+/tick</th>
+              <th>-/tick</th>
+              <th>Total stored</th>
+            </tr>
+            ${Object.values(Resources).map(
+              (resourceKey) =>
+                html`<tr>
+                  <th>${resourceKey}</th>
+                  <td>
+                    ${[...(this.scenario.assetDirectory.producers.get(resourceKey) ?? [])].reduce(
+                      (acc, producer) => acc + (producer.produces.get(resourceKey) ?? 0),
+                      0
+                    )}
+                  </td>
+                  <td>
+                    ${[...(this.scenario.assetDirectory.consumers.get(resourceKey) ?? [])].reduce(
+                      (acc, consumer) => acc + (consumer.consumes.get(resourceKey) ?? 0),
+                      0
+                    )}
+                  </td>
+                  <td>
+                    ${[...(this.scenario.assetDirectory.stores.get(resourceKey) ?? [])].reduce(
+                      (acc, store) => acc + (store.storageUnits.balance(resourceKey) ?? 0),
+                      0
+                    )}
+                  </td>
+                </tr>`
+            )}
+          </table>
+        </aside>
+      </main>
       <main>
         ${this.scenario
           .getGameState()
