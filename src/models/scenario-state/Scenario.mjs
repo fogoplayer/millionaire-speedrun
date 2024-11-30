@@ -60,7 +60,7 @@ export class Scenario {
   getGameState() {
     return {
       ticks: this.#ticks,
-      assets: [...this.assetDirectory.assets].map((asset) => asset.prettyName).join(", "),
+      assets: this.assetDirectory.assets,
       productionTotals: this.getDirectoryEntryTotals(
         this.assetDirectory.producers,
         (asset, resource) => asset.produces.get(resource) || 0
@@ -74,7 +74,7 @@ export class Scenario {
       ),
       toString() {
         return `Ticks: ${this.ticks}
-Assets: ${this.assets}
+Assets: ${[...this.assets].map((asset) => asset.prettyName).join(", ")}
 Production: ${JSON.stringify(this.productionTotals, null, 2)}
 Consumption: ${JSON.stringify(this.consumptionTotals, null, 2)}
 Storage: ${JSON.stringify(this.storageTotals, null, 2)}

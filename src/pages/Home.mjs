@@ -31,6 +31,29 @@ export default class Home extends LitElement {
   render() {
     return html`<header><h1>Millionaire Speedrun</h1></header>
       <main>
+        <section class="asset-display">
+          ${[...this.scenario.getGameState().assets].map(
+            (asset) =>
+              html`<table>
+                <tr>
+                  <th>Name</th>
+                  <td>${asset.prettyName}</td>
+                </tr>
+                <tr>
+                  <th>+/tick</th>
+                  <td>${asset.produces}</td>
+                </tr>
+                <tr>
+                  <th>-/tick</th>
+                  <td>${asset.consumes}</td>
+                </tr>
+                <tr>
+                  <th>stores</th>
+                  <td>${asset.storageUnits}</td>
+                </tr>
+              </table>`
+          )}
+        </section>
         <aside>
           <table>
             <tr>
@@ -43,96 +66,75 @@ export default class Home extends LitElement {
               (resourceKey) =>
                 html`<tr>
                   <th>${resourceKey}</th>
-                  <td>
-                    ${[...(this.scenario.assetDirectory.producers.get(resourceKey) ?? [])].reduce(
-                      (acc, producer) => acc + (producer.produces.get(resourceKey) ?? 0),
-                      0
-                    )}
-                  </td>
-                  <td>
-                    ${[...(this.scenario.assetDirectory.consumers.get(resourceKey) ?? [])].reduce(
-                      (acc, consumer) => acc + (consumer.consumes.get(resourceKey) ?? 0),
-                      0
-                    )}
-                  </td>
-                  <td>
-                    ${[...(this.scenario.assetDirectory.stores.get(resourceKey) ?? [])].reduce(
-                      (acc, store) => acc + (store.storageUnits.balance(resourceKey) ?? 0),
-                      0
-                    )}
-                  </td>
+                  <td><output>${this.scenario.getGameState().productionTotals[resourceKey] ?? 0}</output></td>
+                  <td><output>${this.scenario.getGameState().consumptionTotals[resourceKey] ?? 0}</output></td>
+                  <td><output>${this.scenario.getGameState().storageTotals[resourceKey] ?? 0}</output></td>
                 </tr>`
             )}
           </table>
         </aside>
-      </main>
-      <main>
-        ${this.scenario
-          .getGameState()
-          .toString()
-          .split("\n")
-          .reduce((acc, curr) => {
-            acc.push(curr, html`<br />`);
-            return acc;
-          }, /** @type {any[]} */ ([]))}
-      </main>
-      <form action="#" @submit=${(/** @type {MouseEvent} */ e) => e.preventDefault()}>
-        <button @click=${() => this.scenario.play()}>Play</button>
-        <button @click=${() => this.scenario.pause()}>Pause</button>
-        <button @click=${() => this.startGame()}>Restart</button>
-
-        ${[...GlobalAssetDirectory.assetsByResource.entries()].map(
-          ([resource, assets]) =>
-            html` <h2>${resource}</h2>
-              <table>
-                <tr>
-                  <th>Asset</th>
-                  <th>Produces</th>
-                  <th>Consumes</th>
-                  <th>Stores</th>
-                  <th>Action</th>
-                </tr>
-                ${[...assets].map(
-                  (asset) => html`
-            
-                    <tr>
-                      <td>${
-                        // @ts-ignore
-                        asset.prettyName
-                      }</td>
-                      <td>${
-                        // @ts-ignore
-                        asset.produces.map(
-                          /** @param {{resource: Resource, amount: number}} args */
-                          ({ resource, amount }) => html`<p>${resource}: ${amount}</p>`
-                        )
-                      }</td>
-                      <td>${
-                        // @ts-ignore
-                        asset.consumes.map(
-                          /** @param {{resource: Resource, amount: number}} args */
-                          ({ resource, amount }) => html`<p>${resource}: ${amount}</p>`
-                        )
-                      }</td>
-                      <td>${
-                        // @ts-ignore
-                        asset.stores.map(
-                          /** @param {Stat<Resource> | Resource} statOrResource */ (statOrResource) =>
-                            html`<p>${statOrResource instanceof Stat ? statOrResource.resource : statOrResource}</p>`
-                        )
-                      }</td>
-                      <td><button @click=${() => {
-                        const Class = /** @type {new()=>Asset} */ (asset);
-                        const newAsset = this.scenario.spawnAsset(Class);
-                        this.scenario.placeAsset(newAsset);
-                        this.requestUpdate();
-                      }}>Add</button></button></td>
-                    </tr>
-                  </table>`
-                )}
-              </table>`
-        )}
-      </form>`;
+        <form @submit=${(/** @type {MouseEvent} */ e) => e.preventDefault()}>
+          <button @click=${() => this.scenario.play()}>Play</button>
+          <button @click=${() => this.scenario.pause()}>Pause</button>
+          <button @click=${() => this.startGame()}>Restart</button>
+        </form>
+        <form @submit=${(/** @type {MouseEvent} */ e) => e.preventDefault()}>
+          ${[...GlobalAssetDirectory.assetsByResource.entries()].map(
+            ([resource, assets]) =>
+              html` <details>
+                <summary>
+                  <h2>${resource}</h2>
+                </summary>
+                <table>
+                  <tr>
+                    <th>Asset</th>
+                    <th>Produces</th>
+                    <th>Consumes</th>
+                    <th>Stores</th>
+                    <th>Action</th>
+                  </tr>
+                  ${[...assets].map(
+                    (asset) => html`
+                      <tr>
+                        <td>${
+                          // @ts-ignore
+                          asset.prettyName
+                        }</td>
+                        <td>${
+                          // @ts-ignore
+                          asset.produces.map(
+                            /** @param {{resource: Resource, amount: number}} args */
+                            ({ resource, amount }) => html`<p>${resource}: ${amount}</p>`
+                          )
+                        }</td>
+                        <td>${
+                          // @ts-ignore
+                          asset.consumes.map(
+                            /** @param {{resource: Resource, amount: number}} args */
+                            ({ resource, amount }) => html`<p>${resource}: ${amount}</p>`
+                          )
+                        }</td>
+                        <td>${
+                          // @ts-ignore
+                          asset.stores.map(
+                            /** @param {Stat<Resource> | Resource} statOrResource */ (statOrResource) =>
+                              html`<p>${statOrResource instanceof Stat ? statOrResource.resource : statOrResource}</p>`
+                          )
+                        }</td>
+                        <td><button @click=${() => {
+                          const Class = /** @type {new()=>Asset} */ (asset);
+                          const newAsset = this.scenario.spawnAsset(Class);
+                          this.scenario.placeAsset(newAsset);
+                          this.requestUpdate();
+                        }}>Add</button></button></td>
+                      </tr>
+                    </table>`
+                  )}
+                </table>
+              </details>`
+          )}
+        </form>
+      </main>`;
   }
 
   startGame() {
