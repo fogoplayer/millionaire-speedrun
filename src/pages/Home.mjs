@@ -54,7 +54,7 @@ export default class Home extends LitElement {
               </table>`
           )}
         </section>
-        <aside>
+        <aside class="totals">
           <table>
             <tr>
               <th>Resource</th>
@@ -73,15 +73,15 @@ export default class Home extends LitElement {
             )}
           </table>
         </aside>
-        <form @submit=${(/** @type {MouseEvent} */ e) => e.preventDefault()}>
+        <form class="controls" @submit=${(/** @type {MouseEvent} */ e) => e.preventDefault()}>
           <button @click=${() => this.scenario.play()}>Play</button>
           <button @click=${() => this.scenario.pause()}>Pause</button>
           <button @click=${() => this.startGame()}>Restart</button>
         </form>
-        <form @submit=${(/** @type {MouseEvent} */ e) => e.preventDefault()}>
+        <form class="asset-directory" @submit=${(/** @type {MouseEvent} */ e) => e.preventDefault()}>
           ${[...GlobalAssetDirectory.assetsByResource.entries()].map(
             ([resource, assets]) =>
-              html` <details>
+              html` <details open>
                 <summary>
                   <h2>${resource}</h2>
                 </summary>
@@ -158,8 +158,54 @@ export default class Home extends LitElement {
         border-collapse: collapse;
       }
 
+      th {
+        font-weight: bold;
+        background-color: #00000044;
+      }
+
+      th,
       td {
         border: 1px solid black;
+      }
+
+      main {
+        display: grid;
+        grid-template-areas:
+          "asset-display totals"
+          "controls totals"
+          "asset-directory asset-directory";
+        grid-template-columns: 1fr auto;
+
+        padding: 0;
+      }
+
+      .asset-display {
+        grid-area: asset-display;
+
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(10em, auto));
+        background-color: lightgoldenrodyellow;
+      }
+
+      .totals {
+        grid-area: totals;
+        background-color: lightgreen;
+      }
+
+      .controls {
+        grid-area: controls;
+        background-color: lightblue;
+      }
+
+      .asset-directory {
+        grid-area: asset-directory;
+        display: flex;
+        background-color: lightpink;
+      }
+
+      summary h2 {
+        display: inline-block;
+        font: inherit;
       }
     `,
   ];
