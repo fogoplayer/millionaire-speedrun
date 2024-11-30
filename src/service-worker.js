@@ -1,3 +1,4 @@
+// @ts-nocheck remove later
 const VERSION = "1.0.0";
 
 // This is the "Offline copy of assets" service worker

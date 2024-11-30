@@ -1,3 +1,4 @@
+// @ts-nocheck until I use this file
 import { LitElement, html, css } from "../libs/lit-all@2.7.6.js";
 import globalCss from "../global-styles/global.css.mjs";
 import { sendPasswordResetEmail } from "../services/auth.mjs";
@@ -22,8 +23,7 @@ export default class ForgotPassword extends LitElement {
     e.preventDefault();
     try {
       await sendPasswordResetEmail(this.email);
-      this.message =
-        "Email sent. If it does not seem to arrive, check your spam folder before trying again";
+      this.message = "Email sent. If it does not seem to arrive, check your spam folder before trying again";
     } catch (e) {
       if (e instanceof Error) this.message = e.message;
       else this.message = String(e);
@@ -34,17 +34,10 @@ export default class ForgotPassword extends LitElement {
     return html`
       <main>
         <form @submit=${this.submitForgotPassword}>
-          <p>
-            Forgot your password? Put in the email associated with your account
-            and we'll send you a reset link
-          </p>
+          <p>Forgot your password? Put in the email associated with your account and we'll send you a reset link</p>
           <label>
             Email
-            <input
-              type="text"
-              @change=${(/** @type {HTMLInputEvent} */ e) =>
-                (this.email = e.target.value.trim())}
-            />
+            <input type="text" @change=${(/** @type {HTMLInputEvent} */ e) => (this.email = e.target.value.trim())} />
           </label>
           <button class="button">Submit</button>
           <p class="error-message">${this.message}</p>

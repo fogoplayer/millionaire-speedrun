@@ -1,3 +1,4 @@
+// @ts-nocheck remove if I end up using this file
 import { LitElement, html, css } from "../libs/lit-all@2.7.6.js";
 import globalCss from "../global-styles/global.css.mjs";
 import { authStateChanged, emailAndPasswordSignUp } from "../services/auth.mjs";
@@ -67,8 +68,7 @@ export default class SignUp extends LitElement {
             Display Name
             <input
               type="text"
-              @change=${(/** @type {HTMLInputEvent} */ e) =>
-                (this.username = e.target.value)}
+              @change=${(/** @type {HTMLInputEvent} */ e) => (this.username = e.target.value)}
               required
             />
           </label>
@@ -76,8 +76,7 @@ export default class SignUp extends LitElement {
             Email
             <input
               type="email"
-              @change=${(/** @type {HTMLInputEvent} */ e) =>
-                (this.email = e.target.value)}
+              @change=${(/** @type {HTMLInputEvent} */ e) => (this.email = e.target.value)}
               required
             />
           </label>
@@ -85,13 +84,11 @@ export default class SignUp extends LitElement {
             Password
             <input
               type="password"
-              @change=${(/** @type {HTMLInputEvent} */ e) =>
-                (this.password = e.target.value)}
+              @change=${(/** @type {HTMLInputEvent} */ e) => (this.password = e.target.value)}
               required
             />
           </label>
-          ${this.errorMessage &&
-          html`<p class="error-message">${this.errorMessage}</p>`}
+          ${this.errorMessage && html`<p class="error-message">${this.errorMessage}</p>`}
           <button class="button">Sign Up</button>
           <p>
             Already have an account?

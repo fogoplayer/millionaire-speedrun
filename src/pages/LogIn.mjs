@@ -1,3 +1,4 @@
+// @ts-nocheck remove if I end up using this file
 import { LitElement, html, css } from "../libs/lit-all@2.7.6.js";
 import globalCss from "../global-styles/global.css.mjs";
 import { emailAndPasswordLogIn } from "../services/auth.mjs";
@@ -46,23 +47,14 @@ export default class LogIn extends LitElement {
         <form @submit=${this.logIn}>
           <label>
             Email
-            <input
-              type="text"
-              @change=${(/** @type {HTMLInputEvent} */ e) =>
-                (this.email = e.target.value)}
-            />
+            <input type="text" @change=${(/** @type {HTMLInputEvent} */ e) => (this.email = e.target.value)} />
           </label>
           <label>
             Password
-            <input
-              type="password"
-              @change=${(/** @type {HTMLInputEvent} */ e) =>
-                (this.password = e.target.value)}
-            />
+            <input type="password" @change=${(/** @type {HTMLInputEvent} */ e) => (this.password = e.target.value)} />
           </label>
           <button class="button">Log In</button>
-          ${this.errorMessage &&
-          html`<p class="error-message">${this.errorMessage}</p>`}
+          ${this.errorMessage && html`<p class="error-message">${this.errorMessage}</p>`}
           <p><a href="/forgot-password">Forgot your password?</a></p>
           <p>
             Don't have an account?
