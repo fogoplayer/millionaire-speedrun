@@ -69,7 +69,7 @@ export class InvalidResourceError extends Error {
    * @param {Asset} asset
    */
   constructor(resource, asset) {
-    super(`${resource.description} is not stored in ${asset.prettyName}`);
+    super(`${resource} is not stored in ${asset.prettyName}`);
   }
 }
 
@@ -79,6 +79,6 @@ export class InsufficientResourceError extends Error {
    * @param {Asset} asset
    */
   constructor(resource, asset) {
-    super(`Insufficient ${resource.description} in ${asset.prettyName}`);
+    super(`Insufficient ${resource} in ${asset.prettyName}`);
   }
 }

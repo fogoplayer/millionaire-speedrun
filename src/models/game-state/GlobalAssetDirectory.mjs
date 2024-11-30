@@ -1,19 +1,23 @@
 /** @typedef {import("../Resources.mjs").Resource} Resource */
 /** @typedef {import("../assets/Asset.mjs").Asset} Asset */
-/** @typedef {import("../assets/Asset.mjs").AssetConstructor} AssetConstructor */
 
 import { Stat } from "../Stat.mjs";
 
-/** @type {Map<Resource, Set<AssetConstructor>>} */
+/** @type {Map<Resource, Set<Asset["constructor"]>>} */
 export const assetsByResource = new Map();
 
 /**
  * @param {Asset["constructor"]} asset
  */
 export function register(asset) {
-  asset.produces.forEach((stat) => pushToMapEntry(assetsByResource, stat.resource, asset));
-  asset.stores.forEach((statOrResource) =>
-    pushToMapEntry(assetsByResource, statOrResource instanceof Stat ? statOrResource.resource : statOrResource, asset)
+  // @ts-ignore
+  asset.produces.forEach(
+    /** @param {Stat<Resource>} stat */ (stat) => pushToMapEntry(assetsByResource, stat.resource, asset)
+  );
+  // @ts-ignore
+  asset.stores.forEach(
+    /** @param {Stat<Resource>} statOrResource */ (statOrResource) =>
+      pushToMapEntry(assetsByResource, statOrResource instanceof Stat ? statOrResource.resource : statOrResource, asset)
   );
 }
 /**

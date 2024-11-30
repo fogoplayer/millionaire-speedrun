@@ -17,6 +17,7 @@ export class Investment extends Asset {
    */
   constructor({ interestRate = undefined, scenario }) {
     super({ scenario });
+    // @ts-ignore
     this.interestRate = interestRate ?? this.constructor.interestRate;
   }
 

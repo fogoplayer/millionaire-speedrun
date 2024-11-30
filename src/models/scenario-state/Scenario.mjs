@@ -92,10 +92,7 @@ Storage: ${JSON.stringify(this.storageTotals, null, 2)}
     const resourceTotals = {};
 
     directory.forEach((assets, resource) => {
-      resourceTotals[resource.description ?? ""] = [...assets].reduce(
-        (total, asset) => total + extractor(asset, resource),
-        0
-      );
+      resourceTotals[resource ?? ""] = [...assets].reduce((total, asset) => total + extractor(asset, resource), 0);
     });
     return resourceTotals;
   }

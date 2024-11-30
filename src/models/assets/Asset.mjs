@@ -1,8 +1,7 @@
 /** @typedef {import("../Resources.mjs").Resource} Resource */
 /** @typedef {import("../ActionExecutor.mjs").ActionExecutor} ActionExecutor */
 /** @typedef {import("../scenario-state/Scenario.mjs").Scenario} Scenario */
-import { Action } from "../Action.mjs";
-import { currentScenario } from "../game-state/Game.mjs";
+import { Action, ActionVerbs, ResourceAction } from "../Action.mjs";
 import { Stat } from "../Stat.mjs";
 import { StorageUnits } from "./StorageUnits.mjs";
 
@@ -91,10 +90,10 @@ export class Asset {
     }
 
     this.produces.forEach((amount, resource) => {
-      this.emitAction(Action.DEPOSIT, amount, resource);
+      this.emitAction(new ResourceAction(ActionVerbs.DEPOSIT, amount, resource));
     });
     this.consumes.forEach((amount, resource) => {
-      this.emitAction(Action.CONSUME, amount, resource);
+      this.emitAction(new ResourceAction(ActionVerbs.CONSUME, amount, resource));
     });
   }
 
@@ -111,31 +110,41 @@ export class Asset {
   ////////////////////
 
   /**
-   * @param {Action.DEPOSIT | Action.CONSUME} verb
-   * @param {number} amount
-   * @param {Resource} resource
+   * @param {Action<unknown>}action
    */
-  emitAction(verb, amount, resource) {
-    this.actionExecutor.queueActions(new Action(this, verb, amount, resource));
+  emitAction(action) {
+    this.actionExecutor.queueActions(action);
   }
 
   /**
-   * @param {Action} action
+   * @param {Action<unknown>} action
    */
   handleAction(action) {
-    switch (action.verb) {
-      case Action.DEPOSIT:
-        return this.storageUnits.deposit(action.resource, action.amount);
-      case Action.CONSUME:
-        return this.storageUnits.withdraw(action.resource, action.amount);
-      default:
-        return throwIfSwitchIsNotExhaustive(action.verb);
+    if (action instanceof ResourceAction) {
+      switch (action.verb) {
+        case ActionVerbs.DEPOSIT:
+          return this.storageUnits.deposit(action.data.resource, action.data.amount);
+        case ActionVerbs.CONSUME:
+          return this.storageUnits.withdraw(action.data.resource, action.data.amount);
+        default:
+          return throwIfSwitchIsNotExhaustive(action.verb);
+      }
     }
+    return throwIfSwitchIsNotExhaustive(action.verb);
   }
 }
 
+/**
+ * @typedef {{
+ *  prettyName: string;
+ *  produces: Stat<Resource>[];
+ *  consumes: Stat<Resource>[];
+ *  stores: Resource[] | Stat<Resource>[];
+ * }} Asset.constructor
+ */
+
 /** @param {unknown} args */
-function abstractMethodShouldBeImplemented(args) {
+function abstractMethodShouldBeImplemented(args = undefined) {
   throw new Error("Not implemented");
 }
 

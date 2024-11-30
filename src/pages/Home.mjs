@@ -1,4 +1,5 @@
 /** @typedef {import("../models/assets/Asset.mjs").Asset} Asset */
+/** @typedef {import("../models/Resources.mjs").Resource} Resource */
 import { LitElement, html, css } from "../libs/lit-all@2.7.6.js";
 import globalCss from "../global-styles/global.css.mjs";
 import { BronzeTradingPost } from "../models/assets/money/producers/BronzeTradingPost.mjs";
@@ -38,14 +39,14 @@ export default class Home extends LitElement {
             return acc;
           }, /** @type {any[]} */ ([]))}
       </main>
-      <form action="#" @submit=${(e) => e.preventDefault()}>
+      <form action="#" @submit=${(/** @type {MouseEvent} */ e) => e.preventDefault()}>
         <button @click=${() => this.scenario.play()}>Play</button>
         <button @click=${() => this.scenario.pause()}>Pause</button>
         <button @click=${() => this.startGame()}>Restart</button>
 
         ${[...GlobalAssetDirectory.assetsByResource.entries()].map(
           ([resource, assets]) =>
-            html` <h2>${resource.description}</h2>
+            html` <h2>${resource}</h2>
               <table>
                 <tr>
                   <th>Asset</th>
@@ -58,17 +59,31 @@ export default class Home extends LitElement {
                   (asset) => html`
             
                     <tr>
-                      <td>${asset.prettyName}</td>
-                      <td>${[...asset.produces].map(({ resource, amount }) => html`<p>${resource.description}: ${amount}</p>`)}</td>
-                      <td>${[...asset.consumes].map(({ resource, amount }) => html`<p>${resource.description}: ${amount}</p>`)}</td>
-                      <td>${[...asset.stores].map(
-                        (statOrResource) =>
-                          html`<p>
-                            ${statOrResource instanceof Stat
-                              ? statOrResource.resource.description
-                              : statOrResource.description}
-                          </p>`
-                      )}</td>
+                      <td>${
+                        // @ts-ignore
+                        asset.prettyName
+                      }</td>
+                      <td>${
+                        // @ts-ignore
+                        asset.produces.map(
+                          /** @param {{resource: Resource, amount: number}} args */
+                          ({ resource, amount }) => html`<p>${resource}: ${amount}</p>`
+                        )
+                      }</td>
+                      <td>${
+                        // @ts-ignore
+                        asset.consumes.map(
+                          /** @param {{resource: Resource, amount: number}} args */
+                          ({ resource, amount }) => html`<p>${resource}: ${amount}</p>`
+                        )
+                      }</td>
+                      <td>${
+                        // @ts-ignore
+                        asset.stores.map(
+                          /** @param {Stat<Resource> | Resource} statOrResource */ (statOrResource) =>
+                            html`<p>${statOrResource instanceof Stat ? statOrResource.resource : statOrResource}</p>`
+                        )
+                      }</td>
                       <td><button @click=${() => {
                         const Class = /** @type {new()=>Asset} */ (asset);
                         const newAsset = this.scenario.spawnAsset(Class);

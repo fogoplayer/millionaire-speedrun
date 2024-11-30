@@ -1,11 +1,11 @@
 /** @typedef {import("./scenario-state/ScenarioAssetDirectory.mjs").ScenarioAssetDirectory} AssetDirectory */
-import { Action } from "./Action.mjs";
+import { Action, ActionVerbs, ResourceAction } from "./Action.mjs";
 
 export class ActionExecutor {
-  /** @type {Action[][]} */
+  /** @type {Action<unknown>[][]} */
   transactionHistory = [];
 
-  /** @type {Action[]} */
+  /** @type {Action<unknown>[]} */
   transactionQueue = [];
 
   /** @param {AssetDirectory} assetDirectory */
@@ -15,7 +15,7 @@ export class ActionExecutor {
 
   /**
    * adds multiple actions to the current transaction
-   * @param {Action[]} actions
+   * @param {Action<unknown>[]} actions
    */
   queueActions(...actions) {
     this.transactionQueue.push(...actions);
@@ -48,32 +48,35 @@ export class ActionExecutor {
   }
 
   /**
-   * @param {Action} action
+   * @param {Action<unknown>} action
    * @returns {number | Error}
    */
   executeAction(action) {
-    let resourceStore = this.assetDirectory.stores.get(action.resource)?.keys().next().value;
-    if (!resourceStore) {
-      console.warn(`Storage for ${action.resource.description} not found`);
-      return -1;
+    if (action instanceof ResourceAction) {
+      let resourceStore = this.assetDirectory.stores.get(action.data.resource)?.keys().next().value;
+      if (!resourceStore) {
+        console.warn(`Storage for ${action.data.resource} not found`);
+        return -1;
+      }
+      return resourceStore.handleAction(action);
     }
-    return resourceStore.handleAction(action);
+    return new Error("Not implemented");
   }
 
   undoTransaction() {
     while (this.transactionQueue.length) {
-      this.undoAction(/** @type {Action} */ (this.transactionQueue.pop()));
+      this.undoAction(/** @type {Action<unknown>} */ (this.transactionQueue.pop()));
     }
   }
 
   /**
-   * @param {Action} action
+   * @param {Action<unknown>} action
    */
   undoAction(action) {
-    if (action.verb === Action.DEPOSIT) {
-      action.verb = Action.CONSUME;
-    } else if (action.verb === Action.CONSUME) {
-      action.verb = Action.DEPOSIT;
+    if (action.verb === ActionVerbs.DEPOSIT) {
+      action.verb = ActionVerbs.CONSUME;
+    } else if (action.verb === ActionVerbs.CONSUME) {
+      action.verb = ActionVerbs.DEPOSIT;
     }
 
     this.executeAction(action);
