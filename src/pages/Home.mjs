@@ -90,6 +90,7 @@ export default class Home extends LitElement {
           </table>
         </aside>
         <form class="controls" @submit=${(/** @type {MouseEvent} */ e) => e.preventDefault()}>
+          <div>Tick: ${this.scenario.currentTick}</div>
           <button @click=${() => this.scenario.play()}>Play</button>
           <button @click=${() => this.scenario.pause()}>Pause</button>
           <button @click=${() => this.startGame()}>Restart</button>

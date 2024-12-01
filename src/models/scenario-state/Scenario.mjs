@@ -12,7 +12,7 @@ export class Scenario {
   /** @type {ReturnType<setInterval> | undefined} */
   tickInterval;
 
-  #ticks = 0;
+  currentTick = 0;
 
   /** @type {Set<() => void>} */
   onTickListeners = new Set();
@@ -23,7 +23,7 @@ export class Scenario {
 
   tick() {
     this.assetDirectory.assets.forEach((asset) => {
-      asset.tick(this.#ticks);
+      asset.tick(this.currentTick);
     });
     const success = this.actionExecutor.executeTransaction();
     if (!success) {
@@ -33,7 +33,7 @@ export class Scenario {
 
     this.onTickListeners.forEach((listener) => listener());
     this.printGameState();
-    this.#ticks++;
+    this.currentTick++;
   }
 
   play() {
@@ -57,7 +57,7 @@ export class Scenario {
 
   getGameState() {
     return {
-      ticks: this.#ticks,
+      ticks: this.currentTick,
       assets: this.assetDirectory.assets,
       productionTotals: this.getDirectoryEntryTotals(
         this.assetDirectory.producers,
