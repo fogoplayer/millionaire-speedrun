@@ -41,15 +41,27 @@ export default class Home extends LitElement {
                 </tr>
                 <tr>
                   <th>+/tick</th>
-                  <td>${asset.produces}</td>
+                  <td>
+                    ${[...asset.produces.entries()].map(
+                      ([resource, amount]) => html`${resource}: ${amount.toFixed(2)}<br />`
+                    )}
+                  </td>
                 </tr>
                 <tr>
                   <th>-/tick</th>
-                  <td>${asset.consumes}</td>
+                  <td>
+                    ${[...asset.consumes.entries()].map(
+                      ([resource, amount]) => html`${resource}: ${amount.toFixed(2)}<br />`
+                    )}
+                  </td>
                 </tr>
                 <tr>
                   <th>stores</th>
-                  <td>${asset.storageUnits}</td>
+                  <td>
+                    ${[...asset.storageUnits.entries()].map(
+                      ([resource, amount]) => html`${resource}: ${amount.toFixed(2)}<br />`
+                    )}
+                  </td>
                 </tr>
               </table>`
           )}
@@ -66,9 +78,13 @@ export default class Home extends LitElement {
               (resourceKey) =>
                 html`<tr>
                   <th>${resourceKey}</th>
-                  <td><output>${this.scenario.getGameState().productionTotals[resourceKey] ?? 0}</output></td>
-                  <td><output>${this.scenario.getGameState().consumptionTotals[resourceKey] ?? 0}</output></td>
-                  <td><output>${this.scenario.getGameState().storageTotals[resourceKey] ?? 0}</output></td>
+                  <td>
+                    <output>${this.scenario.getGameState().productionTotals[resourceKey]?.toFixed(2) ?? 0}</output>
+                  </td>
+                  <td>
+                    <output>${this.scenario.getGameState().consumptionTotals[resourceKey]?.toFixed(2) ?? 0}</output>
+                  </td>
+                  <td><output>${this.scenario.getGameState().storageTotals[resourceKey]?.toFixed(2) ?? 0}</output></td>
                 </tr>`
             )}
           </table>
