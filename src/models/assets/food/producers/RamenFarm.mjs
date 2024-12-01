@@ -1,6 +1,5 @@
 import { Asset } from "../../Asset.mjs";
 import { Resources } from "../../../Resources.mjs";
-import { register } from "../../../game-state/GlobalAssetDirectory.mjs";
 
 export class RamenFarm extends Asset {
   static prettyName = "Ramen Farm";
@@ -10,5 +9,3 @@ export class RamenFarm extends Asset {
     { resource: Resources.HAPPINESS, amount: 1 },
   ];
 }
-
-register(RamenFarm);

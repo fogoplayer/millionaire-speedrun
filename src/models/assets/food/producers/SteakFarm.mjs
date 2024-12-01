@@ -2,7 +2,6 @@
 /** @typedef {import("../../../scenario-state/ScenarioAssetDirectory.mjs").ScenarioAssetDirectory} AssetDirectory */
 import { Asset } from "../../Asset.mjs";
 import { Resources } from "../../../Resources.mjs";
-import { register } from "../../../game-state/GlobalAssetDirectory.mjs";
 
 export class SteakFarm extends Asset {
   static prettyName = "Caviar Farm";
@@ -12,5 +11,3 @@ export class SteakFarm extends Asset {
   ];
   static consumes = [{ resource: Resources.MONEY, amount: 1500 }];
 }
-
-register(SteakFarm);
