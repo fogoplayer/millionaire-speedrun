@@ -4,7 +4,7 @@ import { Asset } from "../../Asset.mjs";
 import { Resources } from "../../../Resources.mjs";
 import { register } from "../../../game-state/GlobalAssetDirectory.mjs";
 
-export class CaviarFarm extends Asset {
+export class SteakFarm extends Asset {
   static prettyName = "Caviar Farm";
   static produces = [
     { resource: Resources.FOOD, amount: 10 },
@@ -13,4 +13,4 @@ export class CaviarFarm extends Asset {
   static consumes = [{ resource: Resources.MONEY, amount: 1500 }];
 }
 
-register(CaviarFarm);
+register(SteakFarm);
