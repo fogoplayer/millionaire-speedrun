@@ -11,9 +11,9 @@ import { currentScenario, setCurrentScenario } from "../models/game-state/Game.m
 import * as GlobalAssetDirectory from "../models/game-state/GlobalAssetDirectory.mjs";
 import { Stat } from "../models/Stat.mjs";
 import { Resources } from "../models/Resources.mjs";
+import { Decoration } from "../models/assets/happiness/producers/Decoration.mjs";
 // component imports
 import "../components/DirectoryEntry.mjs";
-
 export default class Home extends LitElement {
   static get properties() {
     return { gameState: { type: Object, state: true } };
@@ -26,6 +26,7 @@ export default class Home extends LitElement {
     this.scenario.placeAsset(this.scenario.spawnAsset(CheckingAccount));
     this.scenario.placeAsset(this.scenario.spawnAsset(RamenFarm));
     this.scenario.placeAsset(this.scenario.spawnAsset(Pantry));
+    this.scenario.placeAsset(this.scenario.spawnAsset(Decoration));
   }
 
   scenario = currentScenario;
