@@ -6,6 +6,7 @@ import { FrozenDinnerFarm } from "../assets/food/producers/FrozenDinnerFarm.mjs"
 import { RamenFarm } from "../assets/food/producers/RamenFarm.mjs";
 import { SteakFarm } from "../assets/food/producers/SteakFarm.mjs";
 import { Pantry } from "../assets/food/storage/Pantry.mjs";
+import { Decoration } from "../assets/happiness/producers/Decoration.mjs";
 import { BronzeTradingPost } from "../assets/money/producers/BronzeTradingPost.mjs";
 import { SilverTradingPost } from "../assets/money/producers/SilverTradingPost.mjs";
 import { CheckingAccount } from "../assets/money/storage/CheckingAccount.mjs";
@@ -15,14 +16,19 @@ import { Stat } from "../Stat.mjs";
 export const assetsByResource = new Map();
 
 register(
+  // Trading posts
   BronzeTradingPost,
-  CaviarFarm,
-  CheckingAccount,
-  FrozenDinnerFarm,
-  Pantry,
-  RamenFarm,
   SilverTradingPost,
-  SteakFarm
+  // Farms
+  RamenFarm,
+  FrozenDinnerFarm,
+  SteakFarm,
+  CaviarFarm,
+  // Happiness Producers
+  Decoration,
+  // Basic Storage
+  CheckingAccount,
+  Pantry
 );
 
 /**

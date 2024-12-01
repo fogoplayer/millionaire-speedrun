@@ -22,6 +22,9 @@ export class Asset {
   /** @type {Resource[] | Stat<Resource>[]} @abstract */
   static stores = [];
 
+  /** @type {Stat<Resource>[]} @abstract */
+  static costs = [];
+
   #isPlaced = false;
 
   /**
@@ -43,12 +46,15 @@ export class Asset {
     consumes = this.constructor.consumes,
     // @ts-ignore Typescript has bad support for this.constructor
     stores = this.constructor.stores,
+    // @ts-ignore Typescript has bad support for this.constructor
+    costs = this.constructor.costs,
     scenario,
   }) {
     this.prettyName = prettyName;
     this.produces = new Map(produces.map((stat) => [stat.resource, stat.amount]));
     this.consumes = new Map(consumes.map((stat) => [stat.resource, stat.amount]));
     this.storageUnits = new StorageUnits(this, stores);
+    this.costs = new Map(consumes.map((stat) => [stat.resource, stat.amount]));
     // this.preTransactionStorageUnits = this.storageUnits.copy();
     this.actionExecutor = scenario.actionExecutor;
     this.assetDirectory = scenario.assetDirectory;
@@ -64,6 +70,9 @@ export class Asset {
   place() {
     this.#isPlaced = true;
     this.assetDirectory.place(this);
+    this.costs.forEach((amount, resource) => {
+      this.emitAction(new ResourceAction(ActionVerbs.CONSUME, amount, resource));
+    });
   }
 
   /**
