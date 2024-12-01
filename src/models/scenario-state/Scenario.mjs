@@ -17,13 +17,11 @@ export class Scenario {
   /** @type {Set<() => void>} */
   onTickListeners = new Set();
 
-  tick() {
-    // Circular dependency if we create BasicHumanNeeds in the constructor
-    // Instead, we check every tick if it exists and place it if it doesn't
-    if (!this.assetDirectory.stores.has(Resources.HAPPINESS)) {
-      this.assetDirectory.place(new BasicHumanNeeds({ scenario: this }));
-    }
+  constructor() {
+    this.assetDirectory.place(new BasicHumanNeeds({ scenario: this }));
+  }
 
+  tick() {
     this.assetDirectory.assets.forEach((asset) => {
       asset.tick(this.#ticks);
     });
