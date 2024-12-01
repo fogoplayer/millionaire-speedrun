@@ -11,6 +11,8 @@ import { currentScenario, setCurrentScenario } from "../models/game-state/Game.m
 import * as GlobalAssetDirectory from "../models/game-state/GlobalAssetDirectory.mjs";
 import { Stat } from "../models/Stat.mjs";
 import { Resources } from "../models/Resources.mjs";
+// component imports
+import "../components/DirectoryEntry.mjs";
 
 export default class Home extends LitElement {
   static get properties() {
@@ -104,71 +106,7 @@ export default class Home extends LitElement {
                 </summary>
                 <div class="directory-list">
                   ${[...assets].map(
-                    (asset) =>
-                      html` <table>
-                        <tr>
-                          <th>Asset</th>
-                          <td>
-                            ${
-                              // @ts-ignore
-                              asset.prettyName
-                            }
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>Produces</th>
-                          <td>
-                            ${
-                              // @ts-ignore
-                              asset.produces.map(
-                                /** @param {{resource: Resource, amount: number}} args */
-                                ({ resource, amount }) => html`<p>${resource}: ${amount}</p>`
-                              )
-                            }
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>Consumes</th>
-                          <td>
-                            ${
-                              // @ts-ignore
-                              asset.consumes.map(
-                                /** @param {{resource: Resource, amount: number}} args */
-                                ({ resource, amount }) => html`<p>${resource}: ${amount}</p>`
-                              )
-                            }
-                          </td>
-                        </tr>
-                        <tr>
-                          <th>Stores</th>
-                          <td>
-                            ${
-                              // @ts-ignore
-                              asset.stores.map(
-                                /** @param {Stat<Resource> | Resource} statOrResource */ (statOrResource) =>
-                                  html`<p>
-                                    ${statOrResource instanceof Stat ? statOrResource.resource : statOrResource}
-                                  </p>`
-                              )
-                            }
-                          </td>
-                        </tr>
-                        <tr>
-                          <td colspan="2">
-                            <button
-                              style="display:block; margin: 0.5em auto;"
-                              @click=${() => {
-                                const Class = /** @type {new()=>Asset} */ (asset);
-                                const newAsset = this.scenario.spawnAsset(Class);
-                                this.scenario.placeAsset(newAsset);
-                                this.requestUpdate();
-                              }}
-                            >
-                              Add to scenario
-                            </button>
-                          </td>
-                        </tr>
-                      </table>`
+                    (asset) => html`<directory-entry .scenario=${this.scenario} .asset=${asset}></directory-entry>`
                   )}
                 </div>
               </details>`
@@ -189,26 +127,6 @@ export default class Home extends LitElement {
   static styles = [
     globalCss,
     css`
-      button {
-        padding: 1em;
-        border: 1px solid black;
-      }
-
-      table {
-        border-collapse: collapse;
-      }
-
-      th,
-      button {
-        font-weight: bold;
-        background-color: #00000030;
-      }
-
-      th,
-      td {
-        border: 1px solid black;
-      }
-
       main {
         display: grid;
         grid-template-areas:

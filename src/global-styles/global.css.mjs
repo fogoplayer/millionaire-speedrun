@@ -9,4 +9,24 @@ export default css`
   main {
     padding: 1em;
   }
+
+  button {
+    padding: 1em;
+    border: 1px solid black;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  th,
+  button {
+    font-weight: bold;
+    background-color: #00000030;
+  }
+
+  th,
+  td {
+    border: 1px solid black;
+  }
 `;
