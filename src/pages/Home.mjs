@@ -14,6 +14,8 @@ import { Resources } from "../models/Resources.mjs";
 import { Decoration } from "../models/assets/happiness/producers/Decoration.mjs";
 // component imports
 import "../components/DirectoryEntry.mjs";
+import "../components/Tab.mjs";
+
 export default class Home extends LitElement {
   static get properties() {
     return { gameState: { type: Object, state: true } };
@@ -100,17 +102,16 @@ export default class Home extends LitElement {
         </form>
         <form class="asset-directory" @submit=${(/** @type {MouseEvent} */ e) => e.preventDefault()}>
           ${[...GlobalAssetDirectory.assetsByResource.entries()].map(
-            ([resource, assets]) =>
-              html` <details open>
-                <summary>
-                  <h2>${resource}</h2>
-                </summary>
+            ([resource, assets]) => html`
+              <tab->
+                <h2 slot="title">${resource}</h2>
                 <div class="directory-list">
                   ${[...assets].map(
                     (asset) => html`<directory-entry .scenario=${this.scenario} .asset=${asset}></directory-entry>`
                   )}
                 </div>
-              </details>`
+              </tab->
+            `
           )}
         </form>
       </main>`;
@@ -187,7 +188,9 @@ export default class Home extends LitElement {
       .asset-directory {
         grid-area: asset-directory;
 
-        display: flex;
+        /* display: flex; */
+        display: grid;
+        grid-template-columns: auto 1fr;
 
         background-color: lightpink;
 
@@ -199,7 +202,7 @@ export default class Home extends LitElement {
         }
       }
 
-      summary h2 {
+      tab- h2 {
         display: inline-block;
         font: inherit;
       }
