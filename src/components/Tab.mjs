@@ -19,14 +19,14 @@ export class Tab extends LitElement {
   static styles = [
     globalCss,
     css`
-      :host {
-        display: grid;
-        grid-template-columns: subgrid;
-        grid-column: 1/-1;
-      }
-
+      :host,
       details {
         display: contents;
+      }
+
+      ::slotted(:not([slot])) {
+        order: 1;
+        width: 100%;
       }
     `,
   ];

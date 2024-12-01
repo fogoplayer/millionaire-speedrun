@@ -15,6 +15,7 @@ import { Decoration } from "../models/assets/happiness/producers/Decoration.mjs"
 // component imports
 import "../components/DirectoryEntry.mjs";
 import "../components/Tab.mjs";
+import "../components/TabList.mjs";
 
 export default class Home extends LitElement {
   static get properties() {
@@ -101,18 +102,20 @@ export default class Home extends LitElement {
           <button @click=${() => this.startGame()}>Restart</button>
         </form>
         <form class="asset-directory" @submit=${(/** @type {MouseEvent} */ e) => e.preventDefault()}>
-          ${[...GlobalAssetDirectory.assetsByResource.entries()].map(
-            ([resource, assets]) => html`
-              <tab->
-                <h2 slot="title">${resource}</h2>
-                <div class="directory-list">
-                  ${[...assets].map(
-                    (asset) => html`<directory-entry .scenario=${this.scenario} .asset=${asset}></directory-entry>`
-                  )}
-                </div>
-              </tab->
-            `
-          )}
+          <tab-list>
+            ${[...GlobalAssetDirectory.assetsByResource.entries()].map(
+              ([resource, assets]) => html`
+                <tab->
+                  <h2 slot="title">${resource}</h2>
+                  <div class="directory-list">
+                    ${[...assets].map(
+                      (asset) => html`<directory-entry .scenario=${this.scenario} .asset=${asset}></directory-entry>`
+                    )}
+                  </div>
+                </tab->
+              `
+            )}
+          </tab-list>
         </form>
       </main>`;
   }
@@ -188,17 +191,12 @@ export default class Home extends LitElement {
       .asset-directory {
         grid-area: asset-directory;
 
-        /* display: flex; */
-        display: grid;
-        grid-template-columns: auto 1fr;
-
         background-color: lightpink;
-
-        overflow-x: auto;
 
         .directory-list {
           display: flex;
           gap: 0.5em;
+          overflow-x: auto;
         }
       }
 
