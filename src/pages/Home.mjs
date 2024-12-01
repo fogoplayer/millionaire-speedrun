@@ -85,52 +85,75 @@ export default class Home extends LitElement {
                 <summary>
                   <h2>${resource}</h2>
                 </summary>
-                <table>
-                  <tr>
-                    <th>Asset</th>
-                    <th>Produces</th>
-                    <th>Consumes</th>
-                    <th>Stores</th>
-                    <th>Action</th>
-                  </tr>
+                <div class="directory-list">
                   ${[...assets].map(
-                    (asset) => html`
-                      <tr>
-                        <td>${
-                          // @ts-ignore
-                          asset.prettyName
-                        }</td>
-                        <td>${
-                          // @ts-ignore
-                          asset.produces.map(
-                            /** @param {{resource: Resource, amount: number}} args */
-                            ({ resource, amount }) => html`<p>${resource}: ${amount}</p>`
-                          )
-                        }</td>
-                        <td>${
-                          // @ts-ignore
-                          asset.consumes.map(
-                            /** @param {{resource: Resource, amount: number}} args */
-                            ({ resource, amount }) => html`<p>${resource}: ${amount}</p>`
-                          )
-                        }</td>
-                        <td>${
-                          // @ts-ignore
-                          asset.stores.map(
-                            /** @param {Stat<Resource> | Resource} statOrResource */ (statOrResource) =>
-                              html`<p>${statOrResource instanceof Stat ? statOrResource.resource : statOrResource}</p>`
-                          )
-                        }</td>
-                        <td><button @click=${() => {
-                          const Class = /** @type {new()=>Asset} */ (asset);
-                          const newAsset = this.scenario.spawnAsset(Class);
-                          this.scenario.placeAsset(newAsset);
-                          this.requestUpdate();
-                        }}>Add</button></button></td>
-                      </tr>
-                    </table>`
+                    (asset) =>
+                      html` <table>
+                        <tr>
+                          <th>Asset</th>
+                          <td>
+                            ${
+                              // @ts-ignore
+                              asset.prettyName
+                            }
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Produces</th>
+                          <td>
+                            ${
+                              // @ts-ignore
+                              asset.produces.map(
+                                /** @param {{resource: Resource, amount: number}} args */
+                                ({ resource, amount }) => html`<p>${resource}: ${amount}</p>`
+                              )
+                            }
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Consumes</th>
+                          <td>
+                            ${
+                              // @ts-ignore
+                              asset.consumes.map(
+                                /** @param {{resource: Resource, amount: number}} args */
+                                ({ resource, amount }) => html`<p>${resource}: ${amount}</p>`
+                              )
+                            }
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Stores</th>
+                          <td>
+                            ${
+                              // @ts-ignore
+                              asset.stores.map(
+                                /** @param {Stat<Resource> | Resource} statOrResource */ (statOrResource) =>
+                                  html`<p>
+                                    ${statOrResource instanceof Stat ? statOrResource.resource : statOrResource}
+                                  </p>`
+                              )
+                            }
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="2">
+                            <button
+                              style="display:block; margin: 0.5em auto;"
+                              @click=${() => {
+                                const Class = /** @type {new()=>Asset} */ (asset);
+                                const newAsset = this.scenario.spawnAsset(Class);
+                                this.scenario.placeAsset(newAsset);
+                                this.requestUpdate();
+                              }}
+                            >
+                              Add to scenario
+                            </button>
+                          </td>
+                        </tr>
+                      </table>`
                   )}
-                </table>
+                </div>
               </details>`
           )}
         </form>
@@ -158,9 +181,10 @@ export default class Home extends LitElement {
         border-collapse: collapse;
       }
 
-      th {
+      th,
+      button {
         font-weight: bold;
-        background-color: #00000044;
+        background-color: #00000030;
       }
 
       th,
@@ -175,8 +199,15 @@ export default class Home extends LitElement {
           "controls totals"
           "asset-directory asset-directory";
         grid-template-columns: 1fr auto;
+        grid-template-rows: 1fr auto auto;
 
         padding: 0;
+        min-height: calc(100dvh - 2em);
+
+        > * {
+          padding: 0.5em;
+          gap: 0.5em;
+        }
       }
 
       .asset-display {
@@ -184,7 +215,23 @@ export default class Home extends LitElement {
 
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(10em, auto));
+        grid-auto-rows: min-content;
+        gap: 0.5em;
+
         background-color: lightgoldenrodyellow;
+        padding: 0.5em;
+
+        table {
+          display: grid;
+          grid-template-columns: auto 1fr;
+
+          tbody,
+          tr {
+            display: grid;
+            grid-column: 1/-1;
+            grid-template-columns: subgrid;
+          }
+        }
       }
 
       .totals {
@@ -194,13 +241,26 @@ export default class Home extends LitElement {
 
       .controls {
         grid-area: controls;
+
+        display: flex;
+        justify-content: center;
+
         background-color: lightblue;
       }
 
       .asset-directory {
         grid-area: asset-directory;
+
         display: flex;
+
         background-color: lightpink;
+
+        overflow-x: auto;
+
+        .directory-list {
+          display: flex;
+          gap: 0.5em;
+        }
       }
 
       summary h2 {
