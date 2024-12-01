@@ -37,11 +37,13 @@ export class Scenario {
   }
 
   play() {
+    if (this.tickInterval) return;
     this.tickInterval = setInterval(() => this.tick(), 1000);
   }
 
   pause() {
     clearInterval(this.tickInterval);
+    this.tickInterval = undefined;
   }
 
   /** @param {new({scenario}: {scenario: Scenario}) => Asset} assetClass */
