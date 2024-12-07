@@ -5,21 +5,23 @@ export const ActionVerbs = /** @type {const} */ ({
   DEPOSIT: "produce",
   CONSUME: "consume",
   PLACE: "place",
+  DESTROY: "destroy",
 });
 
 /**
  * @typedef {ActionVerbs[keyof typeof ActionVerbs]} ActionVerb
- * @typedef {typeof ActionVerbs.DEPOSIT | typeof ActionVerbs.CONSUME} ActionVerbs.DEPOSIT_OR_CONSUME
+ * @typedef {typeof ActionVerbs.DEPOSIT | typeof ActionVerbs.CONSUME} ResourceVerbs
+ * @typedef {typeof ActionVerbs.PLACE | typeof ActionVerbs.DESTROY} BuildingVerbs
  */
 
 /**
- * @template DataType
+ * @template {ActionVerb} [ActionSupportedVerb=any]
+ * @template [DataType=any]
  */
 export class Action {
   /**
-   * @param {ActionVerb} verb
+   * @param {ActionSupportedVerb} verb
    * @param {DataType} data
-   *
    */
   constructor(verb, data, revertable = false) {
     this.verb = verb;
@@ -28,7 +30,7 @@ export class Action {
   }
 }
 
-/** @extends {Action<{amount: number, resource: Resource}>} */
+/** @extends {Action<ResourceVerbs, {amount: number, resource: Resource}>} */
 export class ResourceAction extends Action {
   /**
    * @param {ActionVerbs["DEPOSIT"] | ActionVerbs["CONSUME"]} verb
@@ -37,7 +39,16 @@ export class ResourceAction extends Action {
    */
   constructor(verb, amount, resource) {
     super(verb, { amount, resource });
-    /** @type {typeof verb} */
-    this.verb;
+  }
+}
+
+/** @extends {Action<BuildingVerbs, {asset: Asset}>} */
+export class BuildingAction extends Action {
+  /**
+   * @param {ActionVerbs["PLACE"] | ActionVerbs["DESTROY"]} verb
+   * @param {Asset} asset
+   */
+  constructor(verb, asset) {
+    super(verb, { asset });
   }
 }
