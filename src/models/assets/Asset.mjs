@@ -119,27 +119,24 @@ export class Asset {
   ////////////////////
 
   /**
-   * @param {Action<unknown>}action
+   * @param {Action}action
    */
   emitAction(action) {
     this.actionExecutor.queueActions(action);
   }
 
   /**
-   * @param {Action<unknown>} action
+   * @param {ResourceAction} action
    */
   handleAction(action) {
-    if (action instanceof ResourceAction) {
-      switch (action.verb) {
-        case ActionVerbs.DEPOSIT:
-          return this.storageUnits.deposit(action.data.resource, action.data.amount);
-        case ActionVerbs.CONSUME:
-          return this.storageUnits.withdraw(action.data.resource, action.data.amount);
-        default:
-          return throwIfSwitchIsNotExhaustive(action.verb);
-      }
+    switch (action.verb) {
+      case ActionVerbs.DEPOSIT:
+        return this.storageUnits.deposit(action.data.resource, action.data.amount);
+      case ActionVerbs.CONSUME:
+        return this.storageUnits.withdraw(action.data.resource, action.data.amount);
+      default:
+        return throwIfSwitchIsNotExhaustive(action.verb);
     }
-    return throwIfSwitchIsNotExhaustive(action.verb);
   }
 }
 
