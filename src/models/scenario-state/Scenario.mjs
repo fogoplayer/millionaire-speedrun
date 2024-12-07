@@ -1,8 +1,8 @@
 /** @typedef {import("../assets/Asset.mjs").Asset} Asset */
 /** @typedef {import("../Resources.mjs").Resource} Resource */
+import { ActionVerbs, BuildingAction } from "../Action.mjs";
 import { ActionExecutor } from "../ActionExecutor.mjs";
 import { BasicHumanNeeds } from "../assets/BasicHumanNeeds.mjs";
-import { Resources } from "../Resources.mjs";
 import { ScenarioAssetDirectory } from "./ScenarioAssetDirectory.mjs";
 
 export class Scenario {
@@ -18,7 +18,12 @@ export class Scenario {
   onTickListeners = new Set();
 
   constructor() {
-    this.assetDirectory.place(new BasicHumanNeeds({ scenario: this }));
+    // do it in its own task so that the set up elements can access the scenario
+    setTimeout(() => this.setup(), 0);
+  }
+
+  setup() {
+    this.placeAsset(new BasicHumanNeeds({ scenario: this }));
   }
 
   tick() {
@@ -54,7 +59,10 @@ export class Scenario {
 
   /** @param {Asset} asset */
   placeAsset(asset) {
-    asset.place();
+    const result = this.actionExecutor.executeActionImmediately(new BuildingAction(ActionVerbs.PLACE, asset));
+    if (result instanceof Error) {
+      console.error(result);
+    }
   }
 
   getGameState() {
@@ -72,6 +80,7 @@ export class Scenario {
       storageTotals: this.getDirectoryEntryTotals(this.assetDirectory.stores, (asset, resource) =>
         asset.storageUnits.balance(resource)
       ),
+      tickHistory: this.actionExecutor.transactionHistory,
       toString() {
         return `Ticks: ${this.ticks}
 Assets: ${[...this.assets].map((asset) => asset.prettyName).join(", ")}
@@ -98,7 +107,7 @@ Storage: ${JSON.stringify(this.storageTotals, null, 2)}
   }
 
   printGameState() {
-    console.log(this.getGameState().toString());
+    console.log(this.getGameState().toString(), "\n", this.getGameState().tickHistory);
   }
 }
 

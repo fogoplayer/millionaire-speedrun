@@ -70,10 +70,13 @@ export class Asset {
    */
   place() {
     this.#isPlaced = true;
-    this.assetDirectory.place(this);
+    /** @type {Error | undefined} */
+    let result;
     this.costs.forEach((amount, resource) => {
-      this.emitAction(new ResourceAction(ActionVerbs.CONSUME, amount, resource));
+      if (result instanceof Error) return;
+      result = this.actionExecutor.executeActionImmediately(new ResourceAction(ActionVerbs.CONSUME, amount, resource));
     });
+    return result;
   }
 
   /**

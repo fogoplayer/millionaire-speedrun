@@ -1,5 +1,5 @@
 /** @typedef {import("./scenario-state/ScenarioAssetDirectory.mjs").ScenarioAssetDirectory} AssetDirectory */
-import { Action, ActionVerbs, ResourceAction } from "./Action.mjs";
+import { Action, ActionVerbs, BuildingAction, ResourceAction } from "./Action.mjs";
 import { currentScenario } from "./game-state/Game.mjs";
 
 export class ActionExecutor {
@@ -52,12 +52,28 @@ export class ActionExecutor {
       }
       return resourceStore.handleAction(action);
     }
+    if (action instanceof BuildingAction) {
+      if (action.verb === ActionVerbs.PLACE) {
+        return this.assetDirectory.place(action.data.asset) ?? 0;
+      }
+      if (action.verb === ActionVerbs.DESTROY) {
+        this.assetDirectory.destroy(action.data.asset);
+      }
+    }
     return new Error("Not implemented");
   }
 
   /** @param {Action} action */
   executeActionImmediately(action) {
-    this.#executeAction(action);
+    const result = this.#executeAction(action);
+    if (result instanceof Error) {
+      return result;
+    }
+
+    if (!this.#gameStateIsValid()) {
+      this.undoAction(action);
+      return new Error("Game state is invalid");
+    }
     this.#addToTransactionHistory(action);
   }
 

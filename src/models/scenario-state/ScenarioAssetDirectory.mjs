@@ -32,6 +32,10 @@ export class ScenarioAssetDirectory {
 
   /** @param {Asset} asset  */
   place(asset) {
+    const result = asset.place();
+    if (result instanceof Error) {
+      return result;
+    }
     this.assets.add(asset);
     asset.produces.forEach((_, resource) => pushToMapEntry(this.producers, resource, asset));
     asset.consumes.forEach((_, resource) => pushToMapEntry(this.consumers, resource, asset));
