@@ -34,6 +34,7 @@ export class Asset {
    *    produces?: Stat<Produces>[],
    *    consumes?: Stat<Consumes>[],
    *    stores?: (Stores | Stat<Stores>)[],
+   *    costs?: Stat<Resource>[],
    *    scenario: Scenario
    *  }} param0
    */
@@ -54,7 +55,7 @@ export class Asset {
     this.produces = new Map(produces.map((stat) => [stat.resource, stat.amount]));
     this.consumes = new Map(consumes.map((stat) => [stat.resource, stat.amount]));
     this.storageUnits = new StorageUnits(this, stores);
-    this.costs = new Map(consumes.map((stat) => [stat.resource, stat.amount]));
+    this.costs = new Map(costs.map((stat) => [stat.resource, stat.amount]));
     // this.preTransactionStorageUnits = this.storageUnits.copy();
     this.actionExecutor = scenario.actionExecutor;
     this.assetDirectory = scenario.assetDirectory;
