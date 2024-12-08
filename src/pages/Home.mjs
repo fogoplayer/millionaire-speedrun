@@ -16,6 +16,7 @@ import { Decoration } from "../models/assets/happiness/producers/Decoration.mjs"
 import "../components/DirectoryEntry.mjs";
 import "../components/Tab.mjs";
 import "../components/TabList.mjs";
+import "../components/assets/AssetView.mjs";
 
 export default class Home extends LitElement {
   static get properties() {
@@ -40,39 +41,7 @@ export default class Home extends LitElement {
     return html`<header><h1>Millionaire Speedrun</h1></header>
       <main>
         <section class="asset-display">
-          ${[...this.scenario.getGameState().assets].map(
-            (asset) =>
-              html`<table>
-                <tr>
-                  <th>Name</th>
-                  <td>${asset.prettyName}</td>
-                </tr>
-                <tr>
-                  <th>+/tick</th>
-                  <td>
-                    ${[...asset.produces.entries()].map(
-                      ([resource, amount]) => html`${resource}: ${amount.toFixed(2)}<br />`
-                    )}
-                  </td>
-                </tr>
-                <tr>
-                  <th>-/tick</th>
-                  <td>
-                    ${[...asset.consumes.entries()].map(
-                      ([resource, amount]) => html`${resource}: ${amount.toFixed(2)}<br />`
-                    )}
-                  </td>
-                </tr>
-                <tr>
-                  <th>stores</th>
-                  <td>
-                    ${[...asset.storageUnits.entries()].map(
-                      ([resource, amount]) => html`${resource}: ${amount.toFixed(2)}<br />`
-                    )}
-                  </td>
-                </tr>
-              </table>`
-          )}
+          ${[...this.scenario.getGameState().assets].map((asset) => html`<asset-view .asset=${asset}></asset-view>`)}
         </section>
         <aside class="totals">
           <table>
@@ -162,18 +131,6 @@ export default class Home extends LitElement {
 
         background-color: lightgoldenrodyellow;
         padding: 0.5em;
-
-        table {
-          display: grid;
-          grid-template-columns: auto 1fr;
-
-          tbody,
-          tr {
-            display: grid;
-            grid-column: 1/-1;
-            grid-template-columns: subgrid;
-          }
-        }
       }
 
       .totals {
