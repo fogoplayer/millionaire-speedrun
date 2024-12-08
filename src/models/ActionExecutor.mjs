@@ -1,5 +1,6 @@
 /** @typedef {import("./scenario-state/ScenarioAssetDirectory.mjs").ScenarioAssetDirectory} AssetDirectory */
 import { Action, ActionVerbs, BuildingAction, ResourceAction } from "./Action.mjs";
+import { throwIfSwitchIsNotExhaustive } from "./assets/Asset.mjs";
 import { currentScenario } from "./game-state/Game.mjs";
 
 export class ActionExecutor {
@@ -23,12 +24,18 @@ export class ActionExecutor {
   }
 
   executeTransaction() {
-    this.transactionQueue.forEach((action) => {
-      this.#executeAction(action);
-    });
+    let error;
+
+    let i = 0;
+    while (i < this.transactionQueue.length) {
+      const action = this.transactionQueue[i];
+      const result = this.#executeAction(action);
+      if (!error && result instanceof Error) error = result;
+      i++;
+    }
 
     const gameStateIsValid = this.#gameStateIsValid();
-    if (gameStateIsValid) {
+    if (!error && gameStateIsValid) {
       this.#addToTransactionHistory(...this.transactionQueue);
     } else {
       this.undoTransaction();
@@ -36,7 +43,9 @@ export class ActionExecutor {
 
     this.actionsInQueueExecuted = 0; // redundant
     this.transactionQueue = [];
-    return gameStateIsValid;
+    if (error) return error;
+    if (!gameStateIsValid) return new Error("Game state is invalid");
+    return undefined;
   }
 
   /**
@@ -47,8 +56,14 @@ export class ActionExecutor {
     if (action instanceof ResourceAction) {
       let resourceStore = this.assetDirectory.stores.get(action.data.resource)?.keys().next().value;
       if (!resourceStore) {
-        console.warn(`Storage for ${action.data.resource} not found`);
-        return -1;
+        if (action.verb === ActionVerbs.CONSUME) {
+          return new Error(`Resource ${action.data.resource} not found`);
+        } else if (action.verb === ActionVerbs.DEPOSIT) {
+          console.warn(`Storage for ${action.data.resource} not found`);
+          return -1;
+        } else {
+          return throwIfSwitchIsNotExhaustive(action.verb);
+        }
       }
       return resourceStore.handleAction(action);
     }
@@ -63,20 +78,6 @@ export class ActionExecutor {
     return new Error("Not implemented");
   }
 
-  /** @param {Action} action */
-  executeActionImmediately(action) {
-    const result = this.#executeAction(action);
-    if (result instanceof Error) {
-      return result;
-    }
-
-    if (!this.#gameStateIsValid()) {
-      this.undoAction(action);
-      return new Error("Game state is invalid");
-    }
-    this.#addToTransactionHistory(action);
-  }
-
   undoTransaction() {
     while (this.transactionQueue.length) {
       this.undoAction(/** @type {Action} */ (this.transactionQueue.pop()));
@@ -85,10 +86,21 @@ export class ActionExecutor {
 
   /** @param {Action} action */
   undoAction(action) {
-    if (action.verb === ActionVerbs.DEPOSIT) {
-      action.verb = ActionVerbs.CONSUME;
-    } else if (action.verb === ActionVerbs.CONSUME) {
-      action.verb = ActionVerbs.DEPOSIT;
+    switch (action.verb) {
+      case ActionVerbs.DEPOSIT:
+        action.verb = ActionVerbs.CONSUME;
+        break;
+      case ActionVerbs.CONSUME:
+        action.verb = ActionVerbs.DEPOSIT;
+        break;
+      case ActionVerbs.PLACE:
+        this.assetDirectory.remove(action.data.asset);
+        return;
+      case ActionVerbs.DESTROY:
+        // to undo, just go back to previous tick
+        break;
+      default:
+        throwIfSwitchIsNotExhaustive(action.verb);
     }
 
     this.#executeAction(action);
@@ -130,7 +142,10 @@ export class ActionExecutor {
     let noError = true;
     this.assetDirectory.stores.forEach((assetSet) =>
       assetSet.forEach((asset) =>
-        asset.storageUnits.forEach((balance) => {
+        asset.storageUnits.forEach((balance, resource) => {
+          if (balance < 0) {
+            console.error(`Balance for ${resource} in ${asset.prettyName} is ${balance}`);
+          }
           noError = noError && balance >= 0;
         })
       )

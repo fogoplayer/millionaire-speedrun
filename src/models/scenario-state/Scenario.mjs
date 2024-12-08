@@ -30,9 +30,10 @@ export class Scenario {
     this.assetDirectory.assets.forEach((asset) => {
       asset.tick(this.currentTick);
     });
-    const success = this.actionExecutor.executeTransaction();
-    if (!success) {
+    const result = this.actionExecutor.executeTransaction();
+    if (result instanceof Error) {
       this.pause();
+      console.error(result);
       return;
     }
 
@@ -59,10 +60,9 @@ export class Scenario {
 
   /** @param {Asset} asset */
   placeAsset(asset) {
-    const result = this.actionExecutor.executeActionImmediately(new BuildingAction(ActionVerbs.PLACE, asset));
-    if (result instanceof Error) {
-      console.error(result);
-    }
+    // TODO new order: placeAsset -> asset.place -> queue building action and cost actions all at once
+    this.actionExecutor.queueActions(new BuildingAction(ActionVerbs.PLACE, asset));
+    this.actionExecutor.executeTransaction();
   }
 
   getGameState() {

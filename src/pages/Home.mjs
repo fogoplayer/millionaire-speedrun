@@ -30,6 +30,8 @@ export default class Home extends LitElement {
     this.scenario.placeAsset(this.scenario.spawnAsset(RamenFarm));
     this.scenario.placeAsset(this.scenario.spawnAsset(Pantry));
     this.scenario.placeAsset(this.scenario.spawnAsset(Decoration));
+
+    setInterval(() => this.requestUpdate(), 1000);
   }
 
   scenario = currentScenario;

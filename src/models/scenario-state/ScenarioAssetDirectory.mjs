@@ -32,10 +32,7 @@ export class ScenarioAssetDirectory {
 
   /** @param {Asset} asset  */
   place(asset) {
-    const result = asset.place();
-    if (result instanceof Error) {
-      return result;
-    }
+    asset.place();
     this.assets.add(asset);
     asset.produces.forEach((_, resource) => pushToMapEntry(this.producers, resource, asset));
     asset.consumes.forEach((_, resource) => pushToMapEntry(this.consumers, resource, asset));
@@ -49,6 +46,12 @@ export class ScenarioAssetDirectory {
 
   /** @param {Asset} asset */
   destroy(asset) {
+    this.remove(asset);
+    asset.destroy(0); // TODO pass in the real tick
+  }
+
+  /** @param {Asset} asset */
+  remove(asset) {
     this.assets.delete(asset);
     asset.produces.forEach((_, resource) => this.producers.get(resource)?.delete(asset));
     asset.consumes.forEach((_, resource) => this.consumers.get(resource)?.delete(asset));
@@ -64,5 +67,6 @@ export class ScenarioAssetDirectory {
         });
       }
     });
+    console.log("Removed asset", asset);
   }
 }

@@ -73,10 +73,8 @@ export class Asset {
     /** @type {Error | undefined} */
     let result;
     this.costs.forEach((amount, resource) => {
-      if (result instanceof Error) return;
-      result = this.actionExecutor.executeActionImmediately(new ResourceAction(ActionVerbs.CONSUME, amount, resource));
+      this.actionExecutor.queueActions(new ResourceAction(ActionVerbs.CONSUME, amount, resource));
     });
-    return result;
   }
 
   /**
@@ -158,7 +156,7 @@ function abstractMethodShouldBeImplemented(args = undefined) {
   throw new Error("Not implemented");
 }
 
-/** @param {never} condition */
-function throwIfSwitchIsNotExhaustive(condition) {
+/** @param {never} condition */ // TODO relocate
+export function throwIfSwitchIsNotExhaustive(condition) {
   return new Error("Unknown action verb");
 }

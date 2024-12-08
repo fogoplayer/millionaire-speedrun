@@ -15,7 +15,7 @@ export const ActionVerbs = /** @type {const} */ ({
  */
 
 /**
- * @template {ActionVerb} [ActionSupportedVerb=any]
+ * @template {ActionVerb} [ActionSupportedVerb=ActionVerb]
  * @template [DataType=any]
  */
 export class Action {
